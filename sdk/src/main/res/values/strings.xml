@@ -149,6 +149,8 @@
     <string name="mpsdk_error_message_missing_payer_cost">No se encontraron cuotas</string>
     <string name="mpsdk_error_message_missing_installment_for_issuer">No se encontraron planes de cuotas para ese banco</string>
     <string name="mpsdk_error_message_multiple_installments_for_issuer">Se encontraron múltiples planes de cuotas para ese banco</string>
+    <string name="mpsdk_error_message_missing_identification_types">No se encontraron identification types</string>
+    <string name="mpsdk_error_message_missing_setting_for_bin">No se encontraron settings para ese bin</string>
 
     <!-- API exception messages -->
     <string name="mpsdk_empty_card_expiration_month">No se ingresó el mes de la fecha de expiración de la tarjeta</string>

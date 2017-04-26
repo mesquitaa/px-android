@@ -1,6 +1,7 @@
 package com.mercadopago.views;
 
 import com.mercadopago.controllers.PaymentMethodGuessingController;
+import com.mercadopago.exceptions.CardTokenException;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.IdentificationType;

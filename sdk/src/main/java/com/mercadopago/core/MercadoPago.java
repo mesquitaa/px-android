@@ -33,6 +33,7 @@ import com.mercadopago.model.Campaign;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardInfo;
 import com.mercadopago.model.CardToken;
+import com.mercadopago.model.Device;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Installment;
@@ -176,13 +177,13 @@ public class MercadoPago {
         }
     }
 
-    public void createToken(final CardToken cardToken, final Callback<Token> callback) {
+    public void createToken(final CardToken cardToken, final Device device, final Callback<Token> callback) {
         if (this.mKeyType.equals(KEY_TYPE_PUBLIC)) {
             MPTracker.getInstance().trackEvent("NO_SCREEN", "CREATE_CARD_TOKEN", "1", mKey, BuildConfig.VERSION_NAME, mContext);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    cardToken.setDevice(mContext);
+                    cardToken.setDevice(device);
                     GatewayService service = mRetrofit.create(GatewayService.class);
                     service.getToken(mKey, "", cardToken).enqueue(callback);
                 }

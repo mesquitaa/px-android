@@ -75,7 +75,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
-            cardToken.validateCardNumber(getApplicationContext(), paymentMethod);
+            cardToken.validateCardNumber(paymentMethod);
         } catch (Exception ex) {
             fail("Failed on validate card number with payment.json method:" + ex.getMessage());
         }
@@ -88,7 +88,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
-            cardToken.validateCardNumber(getApplicationContext(), paymentMethod);
+            cardToken.validateCardNumber(paymentMethod);
             fail("Should have failed on empty card number");
         } catch (Exception ex) {
             assertTrue(ex.getMessage().equals(getApplicationContext().getString(R.string.mpsdk_invalid_empty_card)));
@@ -102,7 +102,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
-            cardToken.validateCardNumber(getApplicationContext(), paymentMethod);
+            cardToken.validateCardNumber(paymentMethod);
             fail("Should have failed on invalid bin");
         } catch (Exception ex) {
             assertTrue(ex.getMessage().equals(getApplicationContext().getString(R.string.mpsdk_invalid_card_bin)));
@@ -116,10 +116,10 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
-            cardToken.validateCardNumber(getApplicationContext(), paymentMethod);
+            cardToken.validateCardNumber(paymentMethod);
             fail("Should have failed on invalid card length");
         } catch (Exception ex) {
-            assertTrue(ex.getMessage().equals(getApplicationContext().getString(R.string.mpsdk_invalid_card_length, 16)));
+            assertTrue(ex.getMessage().equals(getApplicationContext().getString(R.string.mpsdk_invalid_card_length, String.valueOf(16))));
         }
     }
 
@@ -130,7 +130,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
-            cardToken.validateCardNumber(getApplicationContext(), paymentMethod);
+            cardToken.validateCardNumber(paymentMethod);
             fail("Should have failed on invalid luhn");
         } catch (Exception ex) {
             assertTrue(ex.getMessage().equals(getApplicationContext().getString(R.string.mpsdk_invalid_card_luhn)));
@@ -175,7 +175,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
-            cardToken.validateSecurityCode(getApplicationContext(), paymentMethod);
+            cardToken.validateSecurityCode(paymentMethod);
         } catch (Exception ex) {
             fail("Failed on validate security code with payment.json method:" + ex.getMessage());
         }
@@ -188,7 +188,7 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
-            cardToken.validateSecurityCode(getApplicationContext(), paymentMethod);
+            cardToken.validateSecurityCode(paymentMethod);
             fail("Should have failed on invalid bin");
         } catch (Exception ex) {
             assertTrue(ex.getMessage().equals(getApplicationContext().getString(R.string.mpsdk_invalid_field)));
@@ -202,10 +202,10 @@ public class CardTokenTest extends BaseTest<CheckoutActivity> {
         PaymentMethod paymentMethod = StaticMock.getPaymentMethod(getApplicationContext());
 
         try {
-            cardToken.validateSecurityCode(getApplicationContext(), paymentMethod);
+            cardToken.validateSecurityCode(paymentMethod);
             fail("Should have failed on invalid security code length");
         } catch (Exception ex) {
-            assertTrue(ex.getMessage().equals(getApplicationContext().getString(R.string.mpsdk_invalid_cvv_length, 3)));
+            assertTrue(ex.getMessage().equals(getApplicationContext().getString(R.string.mpsdk_invalid_cvv_length, String.valueOf(3))));
         }
     }
 

@@ -29,6 +29,7 @@ import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.CardToken;
 import com.mercadopago.model.Customer;
+import com.mercadopago.model.Device;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
@@ -698,7 +699,7 @@ public class VaultActivity extends AppCompatActivity {
         // Validate CVV
         try {
             mCardToken.setSecurityCode(mSecurityCodeText.getText().toString());
-            mCardToken.validateSecurityCode(this, mSelectedPaymentMethod);
+            mCardToken.validateSecurityCode(mSelectedPaymentMethod);
             mSecurityCodeText.setError(null);
         } catch (Exception ex) {
             mSecurityCodeText.setError(ex.getMessage());
@@ -708,7 +709,7 @@ public class VaultActivity extends AppCompatActivity {
 
         // Create token
         LayoutUtil.showProgressLayout(mActivity);
-        mMercadoPago.createToken(mCardToken, getCreateTokenCallback());
+        mMercadoPago.createToken(mCardToken, new Device(this), getCreateTokenCallback());
     }
 
     protected void createSavedCardToken() {

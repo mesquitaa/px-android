@@ -9,6 +9,7 @@ import com.mercadopago.controllers.CustomServicesHandler;
 import com.mercadopago.model.BankDeal;
 import com.mercadopago.model.Campaign;
 import com.mercadopago.model.CardToken;
+import com.mercadopago.model.Device;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Installment;
@@ -120,11 +121,11 @@ public class MercadoPagoServices {
         }).start();
     }
 
-    public void createToken(final CardToken cardToken, final Callback<Token> callback) {
+    public void createToken(final CardToken cardToken, final Device device, final Callback<Token> callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                cardToken.setDevice(mContext);
+                cardToken.setDevice(device);
                 GatewayService service = getGatewayRetrofit().create(GatewayService.class);
                 service.getToken(mPublicKey, mPrivateKey, cardToken).enqueue(callback);
             }

@@ -203,7 +203,7 @@ public class SecurityCodePresenter {
     private boolean validateSecurityCodeFromToken() {
         try {
             if (!TextUtils.isEmpty(mToken.getFirstSixDigits())) {
-                CardToken.validateSecurityCode(mContext, mSecurityCode, mPaymentMethod, mToken.getFirstSixDigits());
+                CardToken.validateSecurityCode(mSecurityCode, mPaymentMethod, mToken.getFirstSixDigits());
             } else {
                 CardToken.validateSecurityCode(mSecurityCode);
             }

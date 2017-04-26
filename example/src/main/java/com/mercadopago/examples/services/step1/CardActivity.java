@@ -22,6 +22,7 @@ import com.mercadopago.customviews.MPTextView;
 import com.mercadopago.examples.R;
 import com.mercadopago.model.ApiException;
 import com.mercadopago.model.CardToken;
+import com.mercadopago.model.Device;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Token;
@@ -224,12 +225,12 @@ public class CardActivity extends AppCompatActivity {
 
     protected void validateCardNumber(CardToken cardToken) throws Exception {
 
-        cardToken.validateCardNumber(this, mPaymentMethod);
+        cardToken.validateCardNumber(mPaymentMethod);
     }
 
     protected void validateSecurityCode(CardToken cardToken) throws Exception {
 
-        cardToken.validateSecurityCode(this, mPaymentMethod);
+        cardToken.validateSecurityCode(mPaymentMethod);
     }
 
     private void getIdentificationTypesAsync() {
@@ -274,7 +275,7 @@ public class CardActivity extends AppCompatActivity {
 
         LayoutUtil.showProgressLayout(mActivity);
 
-        mMercadoPago.createToken(mCardToken, new Callback<Token>() {
+        mMercadoPago.createToken(mCardToken, new Device(this), new Callback<Token>() {
             @Override
             public void success(Token token) {
 
