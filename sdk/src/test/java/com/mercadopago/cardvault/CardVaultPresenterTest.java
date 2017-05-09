@@ -219,7 +219,7 @@ public class CardVaultPresenterTest {
 
         presenter.initialize();
 
-        assertTrue(provider.failedResponse.getApiException().getError().equals(provider.INSTALLMENTS_NOT_FOUND_ERROR));
+        assertTrue(provider.failedResponse.getApiException().getError().equals(MockedProvider.INSTALLMENTS_NOT_FOUND_ERROR));
 
     }
 
@@ -349,7 +349,7 @@ public class CardVaultPresenterTest {
         MockedProvider provider = new MockedProvider();
 
         Token mockedToken = Tokens.getToken();
-        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOn();
+        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         PayerCost mockedPayerCost = PayerCosts.getPayerCost();
         Issuer mockedIssuer = Issuers.getIssuerMLA();
         String mockedPaymentStatus = Payment.StatusCodes.STATUS_REJECTED;
@@ -407,7 +407,7 @@ public class CardVaultPresenterTest {
         presenter.initialize();
 
         Token mockedToken = Tokens.getToken();
-        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOn();
+        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         PayerCost mockedPayerCost = PayerCosts.getPayerCost();
         Issuer mockedIssuer = null;
         List<PayerCost> mockedPayerCostList = PayerCosts.getPayerCostList();
@@ -436,7 +436,7 @@ public class CardVaultPresenterTest {
         presenter.initialize();
 
         Token mockedToken = Tokens.getToken();
-        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOn();
+        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         PayerCost mockedPayerCost = null;
         Issuer mockedIssuer = Issuers.getIssuerMLA();
         List<PayerCost> mockedPayerCostList = PayerCosts.getPayerCostList();
@@ -466,7 +466,7 @@ public class CardVaultPresenterTest {
         presenter.initialize();
 
         Token mockedToken = Tokens.getToken();
-        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOn();
+        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         PayerCost mockedPayerCost = PayerCosts.getPayerCost();
         Issuer mockedIssuer = Issuers.getIssuerMLA();
         List<PayerCost> mockedPayerCostList = PayerCosts.getPayerCostList();
@@ -497,8 +497,9 @@ public class CardVaultPresenterTest {
         presenter.initialize();
 
         Token mockedToken = Tokens.getToken();
-        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOn();
+        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         Issuer mockedIssuer = Issuers.getIssuerMLA();
+
         List<PayerCost> mockedPayerCostList = PayerCosts.getPayerCostList();
         Boolean directDiscountEnabled = false;
 
@@ -528,7 +529,7 @@ public class CardVaultPresenterTest {
         presenter.initialize();
 
         Token mockedToken = Tokens.getToken();
-        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOn();
+        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         PayerCost mockedPayerCost = PayerCosts.getPayerCost();
         Issuer mockedIssuer = Issuers.getIssuerMLA();
         Discount mockedDiscount = null;
@@ -630,7 +631,7 @@ public class CardVaultPresenterTest {
         provider.setResponse(installmentsList);
 
         Token mockedToken = Tokens.getToken();
-        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOn();
+        PaymentMethod mockedPaymentMethod = PaymentMethods.getPaymentMethodOnVisa();
         PayerCost mockedPayerCost = PayerCosts.getPayerCost();
         Issuer mockedIssuer = Issuers.getIssuerMLA();
         String mockedPaymentStatus = Payment.StatusCodes.STATUS_REJECTED;
@@ -696,6 +697,7 @@ public class CardVaultPresenterTest {
         private static final String MISSING_PUBLIC_KEY = "missing public key";
         private static final String MISSING_SITE = "missing site";
         private static final String INSTALLMENTS_NOT_FOUND_ERROR = "installments not found error";
+
 
         private boolean shouldFail;
         private MercadoPagoError failedResponse;

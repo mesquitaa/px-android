@@ -7,6 +7,7 @@ import com.mercadopago.model.Discount;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
+import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.mvp.ResourcesProvider;
@@ -32,6 +33,8 @@ public interface GuessingCardProvider extends ResourcesProvider {
     void getBankDealsAsync(final OnResourcesRetrievedCallback<List<BankDeal>> onResourcesRetrievedCallback);
 
     void getDirectDiscountAsync(String transactionAmount, String payerEmail, String merchantDiscountUrl, String merchantDiscountUri, Map<String, String> discountAdditionalInfo, final OnResourcesRetrievedCallback<Discount> onResourcesRetrievedCallback);
+
+    void getPaymentMethodsAsync(final OnResourcesRetrievedCallback<List<PaymentMethod>> onResourcesRetrievedCallback);
 
     String getMissingInstallmentsForIssuerErrorMessage();
 

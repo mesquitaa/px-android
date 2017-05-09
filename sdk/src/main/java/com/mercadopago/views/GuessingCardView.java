@@ -118,4 +118,10 @@ public interface GuessingCardView extends MvpView {
     void clearSecurityCodeEditText();
 
     void checkClearCardView();
+
+    void askForPaymentType();
+
+    void showFinishCardFlow();
+
+    void askForIssuers();
 }

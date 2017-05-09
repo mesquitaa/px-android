@@ -16,6 +16,7 @@ import com.mercadopago.model.Discount;
 import com.mercadopago.model.IdentificationType;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Issuer;
+import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.Token;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 
@@ -40,6 +41,21 @@ public class GuessingCardProviderImpl implements GuessingCardProvider {
                 .setPublicKey(publicKey)
                 .setPrivateKey(privateKey)
                 .build();
+    }
+
+    @Override
+    public void getPaymentMethodsAsync(final OnResourcesRetrievedCallback<List<PaymentMethod>> onResourcesRetrievedCallback) {
+        mercadoPago.getPaymentMethods(new Callback<List<PaymentMethod>>() {
+            @Override
+            public void success(List<PaymentMethod> paymentMethods) {
+                onResourcesRetrievedCallback.onSuccess(paymentMethods);
+            }
+
+            @Override
+            public void failure(ApiException apiException) {
+                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException));
+            }
+        });
     }
 
     @Override

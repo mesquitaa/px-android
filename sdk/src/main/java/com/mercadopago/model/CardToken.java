@@ -1,11 +1,11 @@
 package com.mercadopago.model;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.mercadopago.R;
 import com.mercadopago.exceptions.CardTokenException;
 import com.mercadopago.util.MercadoPagoUtil;
+import com.mercadopago.util.TextUtils;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -56,10 +56,6 @@ public class CardToken {
     public Device getDevice() {
         return device;
     }
-
-//    public void setDevice(Context context) {
-//        this.device = new Device(context);
-//    }
 
     public void setDevice(Device device) {
         this.device = device;
@@ -231,8 +227,7 @@ public class CardToken {
     }
 
     public boolean validateCardholderName() {
-        return (cardholder == null) ? false :
-                !TextUtils.isEmpty(cardholder.getName());
+        return cardholder != null && !TextUtils.isEmpty(cardholder.getName());
     }
 
     public static boolean checkLuhn(String cardNumber) {
