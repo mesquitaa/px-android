@@ -352,6 +352,8 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
             mPrivateKey = savedInstanceState.getString(PRIVATE_KEY_BUNDLE);
             mLowResActive = savedInstanceState.getBoolean(LOW_RES_BUNDLE);
 
+            configurePresenter();
+
             if (savedInstanceState.getString(PAYMENT_METHOD_BUNDLE) != null) {
                 PaymentMethod pm = JsonUtil.getInstance().fromJson(savedInstanceState.getString(PAYMENT_METHOD_BUNDLE), PaymentMethod.class);
                 if (pm != null) {
@@ -437,7 +439,6 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 }
             }
 
-            configurePresenter();
         }
     }
 
