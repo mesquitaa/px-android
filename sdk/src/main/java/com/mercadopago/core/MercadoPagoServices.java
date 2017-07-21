@@ -115,7 +115,7 @@ public class MercadoPagoServices {
             public void run() {
                 savedCardToken.setDevice(mContext);
                 GatewayService service = getGatewayRetrofit().create(GatewayService.class);
-                service.getToken(mPublicKey, mPrivateKey, savedCardToken).enqueue(callback);
+                service.getToken(mPublicKey, savedCardToken).enqueue(callback);
             }
         }).start();
     }
@@ -126,7 +126,7 @@ public class MercadoPagoServices {
             public void run() {
                 cardToken.setDevice(mContext);
                 GatewayService service = getGatewayRetrofit().create(GatewayService.class);
-                service.getToken(mPublicKey, mPrivateKey, cardToken).enqueue(callback);
+                service.getToken(mPublicKey, cardToken).enqueue(callback);
             }
         }).start();
     }
@@ -134,45 +134,45 @@ public class MercadoPagoServices {
     public void cloneToken(final String tokenId, final Callback<Token> callback) {
         MPTracker.getInstance().trackEvent("NO_SCREEN", "CLONE_TOKEN", "1", mPublicKey, BuildConfig.VERSION_NAME, mContext);
         GatewayService service = getGatewayRetrofit().create(GatewayService.class);
-        service.getToken(tokenId, this.mPublicKey, mPrivateKey).enqueue(callback);
+        service.getToken(tokenId, this.mPublicKey).enqueue(callback);
     }
 
     public void putSecurityCode(final String tokenId, final SecurityCodeIntent securityCodeIntent, final Callback<Token> callback) {
         MPTracker.getInstance().trackEvent("NO_SCREEN", "CLONE_TOKEN", "1", mPublicKey, BuildConfig.VERSION_NAME, mContext);
         GatewayService service = getGatewayRetrofit().create(GatewayService.class);
-        service.getToken(tokenId, this.mPublicKey, mPrivateKey, securityCodeIntent).enqueue(callback);
+        service.getToken(tokenId, this.mPublicKey, securityCodeIntent).enqueue(callback);
     }
 
     public void getBankDeals(final Callback<List<BankDeal>> callback) {
         MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_BANK_DEALS", "1", mPublicKey, BuildConfig.VERSION_NAME, mContext);
         BankDealService service = getDefaultRetrofit().create(BankDealService.class);
-        service.getBankDeals(this.mPublicKey, mPrivateKey, mContext.getResources().getConfiguration().locale.toString()).enqueue(callback);
+        service.getBankDeals(this.mPublicKey, mContext.getResources().getConfiguration().locale.toString()).enqueue(callback);
     }
 
 
     public void getIdentificationTypes(Callback<List<IdentificationType>> callback) {
         IdentificationService service = getDefaultRetrofit().create(IdentificationService.class);
         MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_IDENTIFICATION_TYPES", "1", mPublicKey, BuildConfig.VERSION_NAME, mContext);
-        service.getIdentificationTypes(this.mPublicKey, this.mPrivateKey).enqueue(callback);
+        service.getIdentificationTypes(this.mPublicKey).enqueue(callback);
     }
 
     public void getInstallments(String bin, BigDecimal amount, Long issuerId, String paymentMethodId, Callback<List<Installment>> callback) {
         MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_INSTALLMENTS", "1", mPublicKey, BuildConfig.VERSION_NAME, mContext);
         PaymentService service = getDefaultRetrofit().create(PaymentService.class);
-        service.getInstallments(this.mPublicKey, mPrivateKey, bin, amount, issuerId, paymentMethodId,
+        service.getInstallments(this.mPublicKey, bin, amount, issuerId, paymentMethodId,
                 mContext.getResources().getConfiguration().locale.toString()).enqueue(callback);
     }
 
     public void getIssuers(String paymentMethodId, String bin, final Callback<List<Issuer>> callback) {
         MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_ISSUERS", "1", mPublicKey, BuildConfig.VERSION_NAME, mContext);
         PaymentService service = getDefaultRetrofit().create(PaymentService.class);
-        service.getIssuers(this.mPublicKey, mPrivateKey, paymentMethodId, bin).enqueue(callback);
+        service.getIssuers(this.mPublicKey, paymentMethodId, bin).enqueue(callback);
     }
 
     public void getPaymentMethods(final Callback<List<PaymentMethod>> callback) {
         MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_PAYMENT_METHODS", "1", mPublicKey, BuildConfig.VERSION_NAME, mContext);
         PaymentService service = getDefaultRetrofit().create(PaymentService.class);
-        service.getPaymentMethods(this.mPublicKey, mPrivateKey).enqueue(callback);
+        service.getPaymentMethods(this.mPublicKey).enqueue(callback);
     }
 
     public void getDirectDiscount(String amount, String payerEmail, final Callback<Discount> callback) {

@@ -11,6 +11,6 @@ import retrofit2.http.Query;
 public interface IdentificationService {
 
     @GET("/v1/identification_types")
-    MPCall<List<IdentificationType>> getIdentificationTypes(@Query("public_key") String publicKey, @Query("access_token") String privateKey);
+    MPCall<List<IdentificationType>> getIdentificationTypes(@Query("public_key") String publicKey);
 
 }

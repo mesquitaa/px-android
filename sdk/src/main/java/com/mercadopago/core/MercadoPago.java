@@ -167,7 +167,7 @@ public class MercadoPago {
                 public void run() {
                     savedCardToken.setDevice(mContext);
                     GatewayService service = mRetrofit.create(GatewayService.class);
-                    service.getToken(mKey,"", savedCardToken).enqueue(callback);
+                    service.getToken(mKey, savedCardToken).enqueue(callback);
                 }
             }).start();
 
@@ -184,7 +184,7 @@ public class MercadoPago {
                 public void run() {
                     cardToken.setDevice(mContext);
                     GatewayService service = mRetrofit.create(GatewayService.class);
-                    service.getToken(mKey, "", cardToken).enqueue(callback);
+                    service.getToken(mKey, cardToken).enqueue(callback);
                 }
             }).start();
         } else {
@@ -197,7 +197,7 @@ public class MercadoPago {
             MPTracker.getInstance().trackEvent("NO_SCREEN", "CLONE_TOKEN", "1", mKey, BuildConfig.VERSION_NAME, mContext);
 
             GatewayService service = mRetrofit.create(GatewayService.class);
-            service.getToken(tokenId, "", this.mKey).enqueue(callback);
+            service.getToken(tokenId, this.mKey).enqueue(callback);
         } else {
             throw new RuntimeException("Unsupported key type for this method");
         }
@@ -208,7 +208,7 @@ public class MercadoPago {
             MPTracker.getInstance().trackEvent("NO_SCREEN", "CLONE_TOKEN", "1", mKey, BuildConfig.VERSION_NAME, mContext);
 
             GatewayService service = mRetrofit.create(GatewayService.class);
-            service.getToken(tokenId, this.mKey,"",  securityCodeIntent).enqueue(callback);
+            service.getToken(tokenId, this.mKey,  securityCodeIntent).enqueue(callback);
         } else {
             throw new RuntimeException("Unsupported key type for this method");
         }
@@ -218,7 +218,7 @@ public class MercadoPago {
         if (this.mKeyType.equals(KEY_TYPE_PUBLIC)) {
             MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_BANK_DEALS", "1", mKey, BuildConfig.VERSION_NAME, mContext);
             BankDealService service = mRetrofit.create(BankDealService.class);
-            service.getBankDeals(this.mKey, "", mContext.getResources().getConfiguration().locale.toString()).enqueue(callback);
+            service.getBankDeals(this.mKey, mContext.getResources().getConfiguration().locale.toString()).enqueue(callback);
         } else {
             throw new RuntimeException("Unsupported key type for this method");
         }
@@ -259,19 +259,15 @@ public class MercadoPago {
 
     public void getIdentificationTypes(Callback<List<IdentificationType>> callback) {
         IdentificationService service = mRetrofit.create(IdentificationService.class);
-        if (this.mKeyType.equals(KEY_TYPE_PUBLIC)) {
-            MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_IDENTIFICATION_TYPES", "1", mKey, BuildConfig.VERSION_NAME, mContext);
-            service.getIdentificationTypes(this.mKey, null).enqueue(callback);
-        } else {
-            service.getIdentificationTypes(null, this.mKey).enqueue(callback);
-        }
+        MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_IDENTIFICATION_TYPES", "1", mKey, BuildConfig.VERSION_NAME, mContext);
+        service.getIdentificationTypes(this.mKey).enqueue(callback);
     }
 
     public void getInstallments(String bin, BigDecimal amount, Long issuerId, String paymentMethodId, Callback<List<Installment>> callback) {
         if (this.mKeyType.equals(KEY_TYPE_PUBLIC)) {
             MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_INSTALLMENTS", "1", mKey, BuildConfig.VERSION_NAME, mContext);
             PaymentService service = mRetrofit.create(PaymentService.class);
-            service.getInstallments(this.mKey,"",  bin, amount, issuerId, paymentMethodId,
+            service.getInstallments(this.mKey,  bin, amount, issuerId, paymentMethodId,
                     mContext.getResources().getConfiguration().locale.toString()).enqueue(callback);
         } else {
             throw new RuntimeException("Unsupported key type for this method");
@@ -282,7 +278,7 @@ public class MercadoPago {
         if (this.mKeyType.equals(KEY_TYPE_PUBLIC)) {
             MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_ISSUERS", "1", mKey, BuildConfig.VERSION_NAME, mContext);
             PaymentService service = mRetrofit.create(PaymentService.class);
-            service.getIssuers(this.mKey, "", paymentMethodId, bin).enqueue(callback);
+            service.getIssuers(this.mKey, paymentMethodId, bin).enqueue(callback);
         } else {
             throw new RuntimeException("Unsupported key type for this method");
         }
@@ -292,7 +288,7 @@ public class MercadoPago {
         if (this.mKeyType.equals(KEY_TYPE_PUBLIC)) {
             MPTracker.getInstance().trackEvent("NO_SCREEN", "GET_PAYMENT_METHODS", "1", mKey, BuildConfig.VERSION_NAME, mContext);
             PaymentService service = mRetrofit.create(PaymentService.class);
-            service.getPaymentMethods(this.mKey, "").enqueue(callback);
+            service.getPaymentMethods(this.mKey).enqueue(callback);
         } else {
             throw new RuntimeException("Unsupported key type for this method");
         }
