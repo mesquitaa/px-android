@@ -40,7 +40,7 @@ public class BatchTrackingStrategy implements TrackingStrategy {
     }
 
     private boolean isConnectivityOk() {
-        return connectivityChecker.hasWifiConnection();
+        return connectivityChecker.hasConnection();
     }
 
     private boolean isDataReady() {
