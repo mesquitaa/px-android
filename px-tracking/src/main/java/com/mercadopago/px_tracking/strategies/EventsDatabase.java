@@ -1,14 +1,22 @@
 package com.mercadopago.px_tracking.strategies;
 
+import android.database.sqlite.SQLiteDatabase;
+
 import com.mercadopago.px_tracking.model.EventTrackIntent;
 
 public interface EventsDatabase {
 
     void addTrack(EventTrackIntent eventTrackIntent);
 
-    Integer batchSize();
+    Integer getBatchSize();
 
     EventTrackIntent retrieveBatch();
 
-    void rollback();
+    void clearExpiredTracks();
+
+    void beginTransaction();
+
+    void setTransactionSuccessful();
+
+    void setTransactionFailure();
 }

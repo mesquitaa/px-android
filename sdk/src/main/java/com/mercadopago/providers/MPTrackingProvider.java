@@ -74,7 +74,7 @@ public class MPTrackingProvider {
 
     }
 
-
+//TODO Si hay problema con la comparación de clases se puede setear acá la estrategia en el builder.
     public static class Builder {
         private Context context;
         private String publicKey;
