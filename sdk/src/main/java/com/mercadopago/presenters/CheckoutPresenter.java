@@ -295,7 +295,10 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
 
     private void checkStartPaymentResultActivity(PaymentResult paymentResult) {
         if (hasToDeleteESC(paymentResult)) {
-            continuePaymentWithoutESC(paymentResult.getPaymentData());
+            deleteESC(paymentResult.getPaymentData());
+        }
+        if (hasToContinuePaymentWithoutESC(paymentResult)) {
+            continuePaymentWithoutESC();
         } else {
             if (hasToStoreESC(paymentResult)) {
                 boolean wasSaved = getResourcesProvider().saveESC(paymentResult.getPaymentData().getToken().getCardId(), paymentResult.getPaymentData().getToken().getEsc());
@@ -325,6 +328,11 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
     }
 
     private boolean hasToDeleteESC(PaymentResult paymentResult) {
+        return hasValidParametersForESC(paymentResult) &&
+                !paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_APPROVED);
+    }
+
+    private boolean hasToContinuePaymentWithoutESC(PaymentResult paymentResult) {
         return hasValidParametersForESC(paymentResult) &&
                 paymentResult.getPaymentStatus().equals(Payment.StatusCodes.STATUS_REJECTED) &&
                 paymentResult.getPaymentStatusDetail().equals(Payment.StatusCodes.STATUS_DETAIL_INVALID_ESC);
@@ -434,6 +442,9 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             public void onSuccess(Payment payment) {
                 mCreatedPayment = payment;
                 PaymentResult paymentResult = createPaymentResult(payment, paymentData);
+                if (hasToDeleteESC(paymentResult)) {
+                    deleteESC(paymentData);
+                }
                 checkStartPaymentResultActivity(paymentResult);
                 cleanTransactionId();
             }
@@ -447,8 +458,8 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
                         Cause cause = causes.get(0);
                         if (ApiException.ErrorCodes.INVALID_PAYMENT_WITH_ESC.equals(cause.getCode()) &&
                                 paymentData.getToken().getCardId() != null) {
-
-                            continuePaymentWithoutESC(paymentData);
+                            deleteESC(paymentData);
+                            continuePaymentWithoutESC();
 
                         } else {
                             recoverCreatePayment(error);
@@ -462,14 +473,16 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
         });
     }
 
-    private void continuePaymentWithoutESC(PaymentData paymentData) {
-        getResourcesProvider().deleteESC(paymentData.getToken().getCardId());
-
+    private void continuePaymentWithoutESC() {
         mPaymentRecovery = new PaymentRecovery(mCreatedToken, mSelectedPaymentMethod,
                 mSelectedPayerCost, mSelectedIssuer, Payment.StatusCodes.STATUS_REJECTED,
                 Payment.StatusCodes.STATUS_DETAIL_INVALID_ESC);
 
         getView().startPaymentRecoveryFlow(mPaymentRecovery);
+    }
+
+    private void deleteESC(PaymentData paymentData) {
+        getResourcesProvider().deleteESC(paymentData.getToken().getCardId());
     }
 
     private void recoverCreatePayment(MercadoPagoError error) {
