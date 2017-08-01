@@ -3,16 +3,20 @@ package com.mercadopago.px_tracking.strategies;
 import android.content.Context;
 import android.util.Log;
 
+import com.mercadopago.px_tracking.model.AppInformation;
+import com.mercadopago.px_tracking.model.Event;
 import com.mercadopago.px_tracking.model.EventTrackIntent;
 import com.mercadopago.px_tracking.services.MPTrackingService;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BatchTrackingStrategy implements TrackingStrategy {
+public class BatchTrackingStrategy extends TrackingStrategy {
 
-    private final static int MIN_BATCH_SIZE = 1;
+    private final static int MIN_BATCH_SIZE = 10;
 
     private final EventsDatabase database;
     private final MPTrackingService trackingService;
@@ -25,9 +29,9 @@ public class BatchTrackingStrategy implements TrackingStrategy {
     }
 
     @Override
-    public void trackEvent(EventTrackIntent eventTrackIntent, Context context) {
-//        database.addTrack(eventTrackIntent);
-//        performTrackAttempt(context);
+    public void trackEvent(Event event, Context context) {
+        database.addTrack(event);
+        performTrackAttempt(context);
     }
 
     private void performTrackAttempt(Context context) {
@@ -49,18 +53,19 @@ public class BatchTrackingStrategy implements TrackingStrategy {
     }
 
     private void sendTracksBatch(final Context context) {
-        EventTrackIntent batch = database.retrieveBatch();
-        trackingService.trackEvents(batch, context, new Callback<Void>() {
+        final List<Event> batch = database.retrieveBatch();
+        EventTrackIntent intent = new EventTrackIntent(getClientId(),getAppInformation(),getDeviceInfo(),batch);
+        trackingService.trackEvents(intent, context, new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-//                    database.setTransactionSuccessful();
+                if (!response.isSuccessful()){
+                    database.addTracks(batch);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-//                database.setTransactionFailure();
+                database.addTracks(batch);
             }
         });
     }

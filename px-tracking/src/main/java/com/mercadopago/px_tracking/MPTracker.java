@@ -138,20 +138,15 @@ public class MPTracker {
      */
     public void trackEvent(String clientId, AppInformation appInformation, DeviceInfo deviceInfo, Event event, Context context) {
 
-        //TODO volar
-//        List<Event> listOfEvents = new ArrayList<Event>();
-//        listOfEvents.add(event);
-//        EventTrackIntent eventTrackIntent = new EventTrackIntent(clientId, appInformation, deviceInfo, listOfEvents);
-
         initializeMPTrackingService();
-
-        //TODO persistir el evento
 
         getTrackingStrategy(context, event);
 
         if (trackingStrategy != null) {
-            //TODO si hay estrategia y las condiciones son ciertas, trackear
-//            trackingStrategy.trackEvent(eventTrackIntent, context);
+            trackingStrategy.trackEvent(event, context);
+            trackingStrategy.setClientId(clientId);
+            trackingStrategy.setAppInformation(appInformation);
+            trackingStrategy.setDeviceInfo(deviceInfo);
         }
 
         if (event.getType().equals(Event.TYPE_ACTION)) {

@@ -2,16 +2,19 @@ package com.mercadopago.px_tracking.strategies;
 
 import android.content.Context;
 
+import com.mercadopago.px_tracking.model.Event;
 import com.mercadopago.px_tracking.model.EventTrackIntent;
 import com.mercadopago.px_tracking.services.MPTrackingService;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ForcedStrategy implements TrackingStrategy {
+public class ForcedStrategy extends TrackingStrategy {
 
-    private final static int MIN_BATCH_SIZE = 5;
+    private final static int MIN_BATCH_SIZE = 10;
 
     private final EventsDatabase database;
     private final MPTrackingService trackingService;
@@ -25,9 +28,9 @@ public class ForcedStrategy implements TrackingStrategy {
     }
 
     @Override
-    public void trackEvent(EventTrackIntent eventTrackIntent, Context context) {
-//        database.addTrack(eventTrackIntent);
-//        performTrackAttempt(context);
+    public void trackEvent(Event event, Context context) {
+        database.addTrack(event);
+        performTrackAttempt(context);
     }
 
     private void performTrackAttempt(Context context) {
@@ -37,30 +40,30 @@ public class ForcedStrategy implements TrackingStrategy {
     }
 
     private boolean shouldSendBatch() {
-        return isConnectivityOk() && isDataReady();
+        return isConnectivityOk();
     }
 
     private boolean isConnectivityOk() {
-        return connectivityChecker.hasWifiConnection();
+        return connectivityChecker.hasConnection();
     }
 
-    private boolean isDataReady() {
-        return database.batchSize() >= MIN_BATCH_SIZE;
-    }
 
     private void sendTracksBatch(final Context context) {
-        EventTrackIntent batch = database.retrieveBatch();
-        trackingService.trackEvents(batch, context, new Callback<Void>() {
+        final List<Event> batch = database.retrieveBatch();
+        EventTrackIntent intent = new EventTrackIntent(getClientId(),getAppInformation(),getDeviceInfo(),batch);
+        trackingService.trackEvents(intent, context, new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     performTrackAttempt(context);
+                }else{
+                    database.addTracks(batch);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                database.rollback();
+                database.addTracks(batch);
             }
         });
     }
