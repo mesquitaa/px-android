@@ -7,8 +7,6 @@ import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
-import com.mercadopago.esc_android.ESCManager;
-import com.mercadopago.esc_android.ESCManagerBuilder;
 import com.mercadopago.exceptions.MercadoPagoError;
 import com.mercadopago.model.Card;
 import com.mercadopago.model.Discount;
@@ -71,12 +69,6 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             decorate();
             mCheckoutPresenter.initialize();
         }
-
-        ESCManager escManager = new ESCManagerBuilder()
-                .setApplicationContext(this)
-                .build();
-
-//        escManager.deleteAllESC();
 
     }
 

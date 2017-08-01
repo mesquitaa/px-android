@@ -1,1 +1,1 @@
-include ':sdk', ':example', ':esc-android-release'
+include ':sdk', ':example'
