@@ -440,9 +440,6 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             public void onSuccess(Payment payment) {
                 mCreatedPayment = payment;
                 PaymentResult paymentResult = createPaymentResult(payment, paymentData);
-                if (hasToDeleteESC(paymentResult)) {
-                    deleteESC(paymentData);
-                }
                 checkStartPaymentResultActivity(paymentResult);
                 cleanTransactionId();
             }
