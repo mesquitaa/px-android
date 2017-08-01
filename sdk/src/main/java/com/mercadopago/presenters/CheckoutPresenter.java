@@ -1,7 +1,5 @@
 package com.mercadopago.presenters;
 
-import android.util.Log;
-
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.constants.PaymentMethods;
 import com.mercadopago.controllers.Timer;

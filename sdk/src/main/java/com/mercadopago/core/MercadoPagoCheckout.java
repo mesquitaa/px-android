@@ -104,7 +104,7 @@ public class MercadoPagoCheckout {
         if (checkoutPreference == null) {
             throw new IllegalStateException("Checkout preference required");
         }
-        if ((CallbackHolder.getInstance().hasPaymentCallback() || resultCode == MercadoPagoCheckout.PAYMENT_RESULT_CODE)
+        if ((CallbackHolder.getInstance().hasPaymentCallback() || resultCode.equals(MercadoPagoCheckout.PAYMENT_RESULT_CODE))
                 && !this.checkoutPreference.hasId()
                 && (this.servicePreference == null || !this.servicePreference.hasCreatePaymentURL())) {
             //TODO revisar

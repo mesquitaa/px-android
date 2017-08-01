@@ -413,7 +413,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         }
 
         paymentPreference.setDefaultPaymentTypeId(mCheckoutPresenter.getSelectedPaymentMethod().getPaymentTypeId());
-        //TODO aca selectedCard es null
+
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mMerchantPublicKey)
