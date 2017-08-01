@@ -100,9 +100,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'design'
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
-    testCompile('junit:junit:4.12')
+    testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.+'
-
     compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
@@ -117,6 +116,7 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.mercadopago:tracking:1.2.3'
+    compile project(':esc-android-release')
 }
 
 configurations {

@@ -11,9 +11,13 @@ import com.mercadopago.model.ApiException;
 import com.mercadopago.model.Installment;
 import com.mercadopago.model.Payer;
 import com.mercadopago.model.PaymentMethodSearch;
+import com.mercadopago.model.SavedESCCardToken;
 import com.mercadopago.model.Site;
+import com.mercadopago.model.Token;
 import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.preferences.PaymentPreference;
+import com.mercadopago.util.MercadoPagoESC;
+import com.mercadopago.util.MercadoPagoESCImpl;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,8 +30,9 @@ public class CardVaultProviderImpl implements CardVaultProvider {
 
     private final Context context;
     private final MercadoPagoServices mercadoPago;
+    private MercadoPagoESC mercadoPagoESC;
 
-    public CardVaultProviderImpl(Context context, String publicKey, String privateKey) {
+    public CardVaultProviderImpl(Context context, String publicKey, String privateKey, boolean escEnabled) {
         this.context = context;
 
         this.mercadoPago = new MercadoPagoServices.Builder()
@@ -35,6 +40,8 @@ public class CardVaultProviderImpl implements CardVaultProvider {
                 .setPublicKey(publicKey)
                 .setPrivateKey(privateKey)
                 .build();
+
+        this.mercadoPagoESC = new MercadoPagoESCImpl(context, escEnabled);
     }
 
     @Override
@@ -82,5 +89,28 @@ public class CardVaultProviderImpl implements CardVaultProvider {
         });
     }
 
+    @Override
+    public void createESCTokenAsync(SavedESCCardToken escCardToken, final OnResourcesRetrievedCallback<Token> onResourcesRetrievedCallback) {
+        mercadoPago.createToken(escCardToken, new Callback<Token>() {
+            @Override
+            public void success(Token token) {
+                onResourcesRetrievedCallback.onSuccess(token);
+            }
 
+            @Override
+            public void failure(ApiException apiException) {
+                onResourcesRetrievedCallback.onFailure(new MercadoPagoError(apiException));
+            }
+        });
+    }
+
+    @Override
+    public String findESCSaved(String cardId) {
+        return mercadoPagoESC.getESC(cardId);
+    }
+
+    @Override
+    public void deleteESC(String cardId) {
+        mercadoPagoESC.deleteESC(cardId);
+    }
 }

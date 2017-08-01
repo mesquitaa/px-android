@@ -1,6 +1,7 @@
 package com.mercadopago.core;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.mercadopago.BuildConfig;
 import com.mercadopago.adapters.ErrorHandlingCallAdapter;
@@ -21,6 +22,7 @@ import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.model.PaymentMethodSearch;
 import com.mercadopago.model.Instructions;
 import com.mercadopago.model.SavedCardToken;
+import com.mercadopago.model.SavedESCCardToken;
 import com.mercadopago.model.SecurityCodeIntent;
 import com.mercadopago.model.Site;
 import com.mercadopago.model.Token;
@@ -53,6 +55,8 @@ public class MercadoPagoServices {
     public static final int BIN_LENGTH = 6;
 
     private static final String MP_API_BASE_URL = "https://api.mercadopago.com";
+    private static final String MP_MOCKED_API_BASE_URL = "http://private-8aca43-prototipocvv.apiary-mock.com";
+
 
     private static final String PAYMENT_RESULT_API_VERSION = "1.3.x";
     private static final String PAYMENT_METHODS_OPTIONS_API_VERSION = "1.3.x";
@@ -105,8 +109,19 @@ public class MercadoPagoServices {
 
     public void createPayment(final PaymentBody paymentBody, final Callback<Payment> callback) {
         MPTracker.getInstance().trackEvent("NO_SCREEN", "CREATE_PAYMENT", "1", mPublicKey, BuildConfig.VERSION_NAME, mContext);
-        CheckoutService service = getDefaultRetrofit(DEFAULT_PAYMENT_CONNECT_TIMEOUT, DEFAULT_PAYMENT_READ_TIMEOUT, DEFAULT_PAYMENT_WRITE_TIMEOUT).create(CheckoutService.class);
+//        CheckoutService service = getDefaultRetrofit(DEFAULT_PAYMENT_CONNECT_TIMEOUT, DEFAULT_PAYMENT_READ_TIMEOUT, DEFAULT_PAYMENT_WRITE_TIMEOUT).create(CheckoutService.class);
+        CheckoutService service = getMockedGatewayRetrofit().create(CheckoutService.class);
         service.createPayment(paymentBody.getTransactionId(), paymentBody).enqueue(callback);
+    }
+
+
+    private Retrofit getMockedGatewayRetrofit() {
+        return getMockedGatewayRetrofit(DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT, DEFAULT_WRITE_TIMEOUT);
+    }
+
+    private Retrofit getMockedGatewayRetrofit(int connectTimeout, int readTimeout, int writeTimeout) {
+        String baseUrl= MP_MOCKED_API_BASE_URL;
+        return getRetrofit(baseUrl, connectTimeout, readTimeout, writeTimeout);
     }
 
     public void createToken(final SavedCardToken savedCardToken, final Callback<Token> callback) {
@@ -115,6 +130,9 @@ public class MercadoPagoServices {
             public void run() {
                 savedCardToken.setDevice(mContext);
                 GatewayService service = getGatewayRetrofit().create(GatewayService.class);
+                Log.d("esccc", "public key " + mPublicKey);
+                Log.d("esccc", "access token " + mPrivateKey);
+                Log.d("esccc", "saved card token " + JsonUtil.getInstance().toJson(savedCardToken));
                 service.getToken(mPublicKey, mPrivateKey, savedCardToken).enqueue(callback);
             }
         }).start();
@@ -126,7 +144,24 @@ public class MercadoPagoServices {
             public void run() {
                 cardToken.setDevice(mContext);
                 GatewayService service = getGatewayRetrofit().create(GatewayService.class);
+                Log.d("esccc", "public key " + mPublicKey);
+                Log.d("esccc", "access token " + mPrivateKey);
+                Log.d("esccc", "create token " + JsonUtil.getInstance().toJson(cardToken));
                 service.getToken(mPublicKey, mPrivateKey, cardToken).enqueue(callback);
+            }
+        }).start();
+    }
+
+    public void createToken(final SavedESCCardToken savedESCCardToken, final Callback<Token> callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                savedESCCardToken.setDevice(mContext);
+                GatewayService service = getGatewayRetrofit().create(GatewayService.class);
+                Log.d("esccc", "public key " + mPublicKey);
+                Log.d("esccc", "access token " + mPrivateKey);
+                Log.d("esccc", "saved esc card token " + JsonUtil.getInstance().toJson(savedESCCardToken));
+                service.getToken(mPublicKey, mPrivateKey, savedESCCardToken).enqueue(callback);
             }
         }).start();
     }

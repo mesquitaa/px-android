@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -12,16 +13,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercadopago.constants.Sites;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.examples.R;
 import com.mercadopago.examples.utils.ColorPickerDialog;
 import com.mercadopago.examples.utils.ExamplesUtils;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.model.Item;
 import com.mercadopago.model.Payment;
+import com.mercadopago.model.PaymentData;
+import com.mercadopago.model.PaymentResult;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.DecorationPreference;
+import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
+
+import java.math.BigDecimal;
 
 public class CheckoutExampleActivity extends AppCompatActivity {
 
@@ -38,6 +46,8 @@ public class CheckoutExampleActivity extends AppCompatActivity {
     private CheckBox mCashExcluded;
     private TextView mJsonConfigButton;
     private String mCheckoutPreferenceId;
+
+    private boolean mShowRyC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +78,78 @@ public class CheckoutExampleActivity extends AppCompatActivity {
     }
 
     private void startMercadoPagoCheckout() {
+        mShowRyC = false;
+        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
+                .addItem(new Item("sasa", new BigDecimal(1000)))
+                .setSite(Sites.ARGENTINA)
+                .setPayerAccessToken("TEST-6270211732691649-021716-3251fde8cfd235124cbc5c78836a3b44__LC_LA__-159840830")
+                .build();
+
+
+        FlowPreference flowPreference = new FlowPreference.Builder()
+                .enableESC()
+                .disableReviewAndConfirmScreen()
+                .build();
+
+
         new MercadoPagoCheckout.Builder()
                 .setActivity(this)
                 .setPublicKey(mPublicKey)
-                .setCheckoutPreference(getCheckoutPreference())
+                .setCheckoutPreference(checkoutPreference)
                 .setDecorationPreference(getCurrentDecorationPreference())
-                .startForPayment();
+                .setFlowPreference(flowPreference)
+                .startForPaymentData();
+//                .startForPayment();
+    }
+
+    private void showRyC(PaymentData paymentData) {
+        mShowRyC = true;
+        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
+                .addItem(new Item("sasa", new BigDecimal(1000)))
+                .setSite(Sites.ARGENTINA)
+                .setPayerAccessToken("TEST-6270211732691649-021716-3251fde8cfd235124cbc5c78836a3b44__LC_LA__-159840830")
+                .build();
+        FlowPreference flowPreference = new FlowPreference.Builder()
+                .enableESC()
+                .build();
+
+        new MercadoPagoCheckout.Builder()
+                .setActivity(this)
+                .setPublicKey(mPublicKey)
+                .setCheckoutPreference(checkoutPreference)
+                .setDecorationPreference(getCurrentDecorationPreference())
+                .setFlowPreference(flowPreference)
+                .setPaymentData(paymentData)
+                .startForPaymentData();
+    }
+
+    private void startWithPaymentResult(PaymentData paymentData) {
+        CheckoutPreference checkoutPreference = new CheckoutPreference.Builder()
+                .addItem(new Item("sasa", new BigDecimal(1000)))
+                .setSite(Sites.ARGENTINA)
+                .setPayerAccessToken("TEST-6270211732691649-021716-3251fde8cfd235124cbc5c78836a3b44__LC_LA__-159840830")
+                .build();
+        FlowPreference flowPreference = new FlowPreference.Builder()
+                .enableESC()
+                .build();
+        PaymentResult paymentResult = new PaymentResult.Builder()
+                .setPaymentData(paymentData)
+                .setPaymentId(1234L)
+                .setPaymentStatus(Payment.StatusCodes.STATUS_APPROVED)
+                .setPaymentStatusDetail(Payment.StatusCodes.STATUS_DETAIL_ACCREDITED)
+//                .setPaymentStatus(Payment.StatusCodes.STATUS_REJECTED)
+//                .setPaymentStatusDetail(Payment.StatusCodes.STATUS_DETAIL_CC_REJECTED_CALL_FOR_AUTHORIZE)
+//                .setPaymentStatusDetail(Payment.StatusCodes.STATUS_DETAIL_INVALID_ESC)
+                .build();
+
+        new MercadoPagoCheckout.Builder()
+                .setActivity(this)
+                .setPublicKey(mPublicKey)
+                .setCheckoutPreference(checkoutPreference)
+                .setDecorationPreference(getCurrentDecorationPreference())
+                .setFlowPreference(flowPreference)
+                .setPaymentResult(paymentResult)
+                .startForPaymentData();
     }
 
 
@@ -89,6 +165,16 @@ public class CheckoutExampleActivity extends AppCompatActivity {
             if (resultCode == MercadoPagoCheckout.PAYMENT_RESULT_CODE) {
                 Payment payment = JsonUtil.getInstance().fromJson(data.getStringExtra("payment"), Payment.class);
                 Toast.makeText(mActivity, "Pago con status: " + payment.getStatus(), Toast.LENGTH_SHORT).show();
+            } else if (resultCode == MercadoPagoCheckout.PAYMENT_DATA_RESULT_CODE) {
+                PaymentData paymentData = JsonUtil.getInstance().fromJson(data.getStringExtra("paymentData"), PaymentData.class);
+                Toast.makeText(mActivity, "Payment data: " + paymentData.getPaymentMethod().getId(), Toast.LENGTH_SHORT).show();
+                Log.d("log", JsonUtil.getInstance().toJson(paymentData.getToken()));
+
+                if (mShowRyC) {
+                    startWithPaymentResult(paymentData);
+                } else {
+                    showRyC(paymentData);
+                }
             } else if (resultCode == RESULT_CANCELED) {
                 if (data != null && data.getStringExtra("mercadoPagoError") != null) {
                     MercadoPagoError mercadoPagoError = JsonUtil.getInstance().fromJson(data.getStringExtra("mercadoPagoError"), MercadoPagoError.class);

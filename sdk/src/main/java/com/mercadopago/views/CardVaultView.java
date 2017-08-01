@@ -24,6 +24,8 @@ public interface CardVaultView extends MvpView {
 
     void startIssuersActivity();
 
+    void startSecurityCodeActivity();
+
     void showProgressLayout();
 
     void askForCardInformation();

@@ -7,7 +7,10 @@ import com.mercadopago.constants.PaymentTypes;
 import com.mercadopago.controllers.CheckoutTimer;
 import com.mercadopago.core.MercadoPagoCheckout;
 import com.mercadopago.core.MercadoPagoComponents;
+import com.mercadopago.esc_android.ESCManager;
+import com.mercadopago.esc_android.ESCManagerBuilder;
 import com.mercadopago.exceptions.MercadoPagoError;
+import com.mercadopago.model.Card;
 import com.mercadopago.model.Discount;
 import com.mercadopago.model.Issuer;
 import com.mercadopago.model.PayerCost;
@@ -68,10 +71,18 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             decorate();
             mCheckoutPresenter.initialize();
         }
+
+        ESCManager escManager = new ESCManagerBuilder()
+                .setApplicationContext(this)
+                .build();
+
+//        escManager.deleteAllESC();
+
     }
 
+
     private void configurePresenter() {
-        CheckoutProvider provider = new CheckoutProviderImpl(this, mMerchantPublicKey, mPrivateKey, mServicePreference);
+        CheckoutProvider provider = new CheckoutProviderImpl(this, mMerchantPublicKey, mPrivateKey, mServicePreference, mCheckoutPresenter.isESCEnabled());
         mCheckoutPresenter.attachResourcesProvider(provider);
         mCheckoutPresenter.attachView(this);
         mCheckoutPresenter.setIdempotencyKeySeed(mMerchantPublicKey);
@@ -222,7 +233,9 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             PayerCost payerCost = JsonUtil.getInstance().fromJson(data.getStringExtra("payerCost"), PayerCost.class);
             Token token = JsonUtil.getInstance().fromJson(data.getStringExtra("token"), Token.class);
             PaymentMethod paymentMethod = JsonUtil.getInstance().fromJson(data.getStringExtra("paymentMethod"), PaymentMethod.class);
-            mCheckoutPresenter.onPaymentMethodSelectionResponse(paymentMethod, issuer, payerCost, token, discount);
+            Card card = JsonUtil.getInstance().fromJson(data.getStringExtra("card"), Card.class);
+
+            mCheckoutPresenter.onPaymentMethodSelectionResponse(paymentMethod, issuer, payerCost, token, discount, card);
         } else if (isErrorResult(data)) {
             MercadoPagoError mercadoPagoError = JsonUtil.getInstance().fromJson(data.getStringExtra("mercadoPagoError"), MercadoPagoError.class);
             mCheckoutPresenter.onPaymentMethodSelectionError(mercadoPagoError);
@@ -302,6 +315,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
                 .setShowBankDeals(mCheckoutPresenter.getShowBankDeals())
                 .setMaxSavedCards(mCheckoutPresenter.getMaxSavedCardsToShow())
                 .setShowAllSavedCardsEnabled(mCheckoutPresenter.shouldShowAllSavedCards())
+                .setESCEnabled(mCheckoutPresenter.isESCEnabled())
                 .startActivity();
     }
 
@@ -407,7 +421,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
         }
 
         paymentPreference.setDefaultPaymentTypeId(mCheckoutPresenter.getSelectedPaymentMethod().getPaymentTypeId());
-
+        //TODO aca selectedCard es null
         new MercadoPagoComponents.Activities.CardVaultActivityBuilder()
                 .setActivity(this)
                 .setMerchantPublicKey(mMerchantPublicKey)
@@ -424,6 +438,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
                 .setDirectDiscountEnabled(mCheckoutPresenter.isDirectDiscountEnabled())
                 .setPaymentRecovery(paymentRecovery)
                 .setShowBankDeals(mCheckoutPresenter.getShowBankDeals())
+                .setESCEnabled(mCheckoutPresenter.isESCEnabled())
+                .setCard(mCheckoutPresenter.getSelectedCard())
                 .startActivity();
 
         animatePaymentMethodSelection();
