@@ -38,7 +38,7 @@ import com.mercadopago.util.CurrenciesUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.MercadoPagoUtil;
-import com.mercadopago.util.TrackingUtil;
+import com.mercadopago.px_tracking.utils.TrackingUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -253,7 +253,7 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
         }
 
         ScreenViewEvent event = builder.build();
-        mpTrackingProvider.addTrackEvent(event);
+        mpTrackingProvider.trackEvent(event);
     }
 
     protected void onInvalidStart(String errorMessage) {

@@ -40,7 +40,7 @@ import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.util.ScaleUtil;
 import com.mercadopago.util.TextUtil;
-import com.mercadopago.util.TrackingUtil;
+import com.mercadopago.px_tracking.utils.TrackingUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -203,7 +203,7 @@ public class InstructionsActivity extends MercadoPagoBaseActivity {
         }
 
         ScreenViewEvent event = builder.build();
-        mpTrackingProvider.addTrackEvent(event);
+        mpTrackingProvider.trackEvent(event);
     }
 
     protected void getInstructionsAsync() {

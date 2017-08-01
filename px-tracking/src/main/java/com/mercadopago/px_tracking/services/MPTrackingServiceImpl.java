@@ -75,8 +75,9 @@ public class MPTrackingServiceImpl implements MPTrackingService {
         });
     }
 
+
     @Override
-    public void trackEvent(EventTrackIntent eventTrackIntent, Context context) {
+    public void trackEvents(EventTrackIntent eventTrackIntent, Context context) {
         Retrofit retrofit = getRetrofit(context);
         TrackingService service = retrofit.create(TrackingService.class);
 
@@ -97,7 +98,7 @@ public class MPTrackingServiceImpl implements MPTrackingService {
     }
 
     @Override
-    public void trackEvent(EventTrackIntent eventTrackIntent, Context context, Callback<Void> callback) {
+    public void trackEvents(EventTrackIntent eventTrackIntent, Context context, Callback<Void> callback) {
         Retrofit retrofit = getRetrofit(context);
         TrackingService service = retrofit.create(TrackingService.class);
         Call<Void> call = service.trackEvents(eventTrackIntent);

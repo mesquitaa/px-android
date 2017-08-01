@@ -1,7 +1,6 @@
 package com.mercadopago.px_tracking.strategies;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.mercadopago.px_tracking.model.EventTrackIntent;
 import com.mercadopago.px_tracking.services.MPTrackingService;
@@ -10,15 +9,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BatchTrackingStrategy implements TrackingStrategy {
+public class ForcedStrategy implements TrackingStrategy {
 
-    private final static int MIN_BATCH_SIZE = 1;
+    private final static int MIN_BATCH_SIZE = 5;
 
     private final EventsDatabase database;
     private final MPTrackingService trackingService;
     private final ConnectivityChecker connectivityChecker;
 
-    public BatchTrackingStrategy(EventsDatabase database, ConnectivityChecker connectivityChecker, MPTrackingService trackingService) {
+    //TODO
+    public ForcedStrategy(EventsDatabase database, ConnectivityChecker connectivityChecker, MPTrackingService trackingService) {
         this.database = database;
         this.trackingService = trackingService;
         this.connectivityChecker = connectivityChecker;
@@ -41,11 +41,11 @@ public class BatchTrackingStrategy implements TrackingStrategy {
     }
 
     private boolean isConnectivityOk() {
-        return connectivityChecker.hasConnection();
+        return connectivityChecker.hasWifiConnection();
     }
 
     private boolean isDataReady() {
-        return database.getBatchSize() >= MIN_BATCH_SIZE;
+        return database.batchSize() >= MIN_BATCH_SIZE;
     }
 
     private void sendTracksBatch(final Context context) {
@@ -54,13 +54,13 @@ public class BatchTrackingStrategy implements TrackingStrategy {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-//                    database.setTransactionSuccessful();
+                    performTrackAttempt(context);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-//                database.setTransactionFailure();
+                database.rollback();
             }
         });
     }

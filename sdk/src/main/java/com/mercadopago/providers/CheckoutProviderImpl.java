@@ -5,7 +5,6 @@ import com.google.gson.reflect.TypeToken;
 
 import android.content.Context;
 
-import com.mercadopago.BuildConfig;
 import com.mercadopago.R;
 import com.mercadopago.callbacks.Callback;
 import com.mercadopago.core.CustomServer;
@@ -29,11 +28,9 @@ import com.mercadopago.mvp.OnResourcesRetrievedCallback;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.preferences.ServicePreference;
-import com.mercadopago.px_tracking.MPTracker;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.util.TextUtils;
-import com.mercadopago.util.TrackingUtil;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;

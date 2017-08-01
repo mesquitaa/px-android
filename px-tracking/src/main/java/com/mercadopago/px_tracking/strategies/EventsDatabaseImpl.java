@@ -29,6 +29,7 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     private static final String MAX_DAYS = "45";
     private static final int MAX_TRACKS = 10;
     private static final int DATABASE_VERSION = 1;
+    private static final String SPLITTER = "%";
 
     private Integer batchSizeCache = 0;
 
@@ -54,8 +55,10 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     @Override
     public void addTrack(EventTrackIntent eventTrackIntent) {
         ContentValues values = new ContentValues();
+
         //FIXME ACÁ SIEMPRE LLEGA CON 1 EVENTO, ENTONCES NO VA A RECIBIR MÁS UN EventTrackIntent
         values.put(TRACK_JSON, JsonConverter.getInstance().toJson(eventTrackIntent.getEvents().get(0)));
+
         values.put(TIMESTAMP, new Timestamp(System.currentTimeMillis()).toString());
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_NAME, null, values);
@@ -75,6 +78,7 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     }
 
     @Override
+
     public void clearExpiredTracks() {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("delete from " + TABLE_NAME + " where " + "'EXTRACT(DAY FROM TIMESTAMP " + TIMESTAMP + ")'" + "- 'EXTRACT(DAY FROM TIMESTAMP " + new String(new Timestamp(System.currentTimeMillis()).toString()) + ")'" + " > " + MAX_DAYS);
@@ -84,12 +88,12 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     @Override
     public EventTrackIntent retrieveBatch() {
 
+
         clearExpiredTracks();
 
         SQLiteDatabase db = getReadableDatabase();
 //        db.beginTransaction();
         String[] columns = {ID, TRACK_JSON};
-
         Cursor cursor = db.query(false, TABLE_NAME, columns, null, null, null, null, "_id desc", null);
 
         String trackJsons;

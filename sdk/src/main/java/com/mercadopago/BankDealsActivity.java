@@ -1,7 +1,6 @@
 package com.mercadopago;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,13 +19,12 @@ import com.mercadopago.model.ApiException;
 import com.mercadopago.model.BankDeal;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.providers.MPTrackingProvider;
-import com.mercadopago.px_tracking.MPTracker;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
-import com.mercadopago.util.TrackingUtil;
+import com.mercadopago.px_tracking.utils.TrackingUtil;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -69,7 +67,7 @@ public class BankDealsActivity extends MercadoPagoActivity {
                 .setScreenId(TrackingUtil.SCREEN_ID_BANK_DEALS)
                 .setScreenName(TrackingUtil.SCREEN_NAME_BANK_DEALS)
                 .build();
-        mpTrackingProvider.addTrackEvent(event);
+        mpTrackingProvider.trackEvent(event);
     }
 
     @Override

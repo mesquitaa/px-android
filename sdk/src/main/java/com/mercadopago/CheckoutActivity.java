@@ -31,14 +31,12 @@ import com.mercadopago.providers.CheckoutProviderImpl;
 import com.mercadopago.providers.MPTrackingProvider;
 import com.mercadopago.px_tracking.MPTracker;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
-import com.mercadopago.util.ApiUtil;
-import com.mercadopago.util.CurrenciesUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.util.TextUtil;
-import com.mercadopago.util.TrackingUtil;
+import com.mercadopago.px_tracking.utils.TrackingUtil;
 import com.mercadopago.views.CheckoutView;
 
 import java.math.BigDecimal;
@@ -144,7 +142,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
                 .setScreenId(TrackingUtil.SCREEN_ID_CHECKOUT)
                 .setScreenName(TrackingUtil.SCREEN_NAME_CHECKOUT)
                 .build();
-        mpTrackingProvider.addTrackEvent(event);
+        mpTrackingProvider.trackEvent(event);
     }
 
     @Override
@@ -236,7 +234,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
             if (mercadoPagoError == null) {
                 mCheckoutPresenter.onCardFlowCancel();
 //                String siteId = mCheckoutPreference.getSite() == null ? "" : mCheckoutPreference.getSite().getId();
-//                MPTracker.getInstance().trackEvent("CARD_VAULT", "CANCELED", "", "3", mMerchantPublicKey, siteId, BuildConfig.VERSION_NAME, this);
+//                MPTracker.getInstance().trackEvents("CARD_VAULT", "CANCELED", "", "3", mMerchantPublicKey, siteId, BuildConfig.VERSION_NAME, this);
             } else {
                 mCheckoutPresenter.onCardFlowError(mercadoPagoError);
             }

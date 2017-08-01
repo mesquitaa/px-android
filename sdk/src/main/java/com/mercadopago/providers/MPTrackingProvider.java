@@ -61,20 +61,11 @@ public class MPTrackingProvider {
                 .build();
     }
 
-
-    public void addTrackEvent(Event event) {
-        //For now we create a list and only add one element
-        //Later we will store the events in the list and send them all at once
-        if (eventList == null) {
-            this.eventList = new ArrayList<>();
-        }
-        this.eventList.add(event);
-
-        MPTracker.getInstance().trackEvents(clientId, appInformation, deviceInfo, eventList, context);
-
+    public void trackEvent(Event event) {
+        MPTracker.getInstance().trackEvent(clientId, appInformation, deviceInfo, event, context);
     }
 
-//TODO Si hay problema con la comparación de clases se puede setear acá la estrategia en el builder.
+    //TODO Si hay problema con la comparación de clases se puede setear acá la estrategia en el builder.
     public static class Builder {
         private Context context;
         private String publicKey;

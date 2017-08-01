@@ -43,13 +43,11 @@ import com.mercadopago.preferences.ReviewScreenPreference;
 import com.mercadopago.presenters.ReviewAndConfirmPresenter;
 import com.mercadopago.providers.MPTrackingProvider;
 import com.mercadopago.providers.ReviewAndConfirmProviderImpl;
-import com.mercadopago.px_tracking.MPTracker;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.uicontrollers.FontCache;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.TextUtil;
-import com.mercadopago.util.TrackingUtil;
+import com.mercadopago.px_tracking.utils.TrackingUtil;
 import com.mercadopago.views.ReviewAndConfirmView;
 
 import java.lang.reflect.Type;
@@ -274,7 +272,7 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
             }
 
             ScreenViewEvent event = builder.build();
-            mpTrackingProvider.addTrackEvent(event);
+            mpTrackingProvider.trackEvent(event);
         }
     }
 

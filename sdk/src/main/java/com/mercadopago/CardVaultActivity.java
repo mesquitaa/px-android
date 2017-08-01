@@ -390,7 +390,7 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
 
         } else if (resultCode == RESULT_CANCELED) {
 //            String siteId = mCardVaultPresenter.getSite() == null ? "" : mCardVaultPresenter.getSite().getId();
-//            MPTracker.getInstance().trackEvent("INSTALLMENTS", "CANCELED", "", "2", mCardVaultPresenter.getPublicKey(),
+//            MPTracker.getInstance().trackEvents("INSTALLMENTS", "CANCELED", "", "2", mCardVaultPresenter.getPublicKey(),
 //                    siteId, BuildConfig.VERSION_NAME, this);
             mCardVaultPresenter.onResultCancel();
         }
@@ -406,7 +406,7 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
 
         } else if (resultCode == RESULT_CANCELED) {
 //            String siteId = mCardVaultPresenter.getSite() == null ? "" : mCardVaultPresenter.getSite().getId();
-//            MPTracker.getInstance().trackEvent("INSTALLMENTS", "CANCELED", "", "2", mCardVaultPresenter.getPublicKey(),
+//            MPTracker.getInstance().trackEvents("INSTALLMENTS", "CANCELED", "", "2", mCardVaultPresenter.getPublicKey(),
 //                    siteId, BuildConfig.VERSION_NAME, this);
             mCardVaultPresenter.onResultCancel();
         }
@@ -444,7 +444,7 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
 
         } else if (resultCode == RESULT_CANCELED) {
 //            String siteId = mCardVaultPresenter.getSite() == null ? "" : mCardVaultPresenter.getSite().getId();
-//            MPTracker.getInstance().trackEvent("GUESSING_CARD", "CANCELED", "", "2", mCardVaultPresenter.getPublicKey(),
+//            MPTracker.getInstance().trackEvents("GUESSING_CARD", "CANCELED", "", "2", mCardVaultPresenter.getPublicKey(),
 //                    siteId, BuildConfig.VERSION_NAME, this);
             mCardVaultPresenter.onResultCancel();
         }
@@ -458,7 +458,7 @@ public class CardVaultActivity extends AppCompatActivity implements CardVaultVie
 
         } else if (resultCode == RESULT_CANCELED) {
 //            String siteId = mCardVaultPresenter.getSite() == null ? "" : mCardVaultPresenter.getSite().getId();
-//            MPTracker.getInstance().trackEvent("SECURITY_CODE_CARD", "CANCELED", "", "2", mCardVaultPresenter.getPublicKey(),
+//            MPTracker.getInstance().trackEvents("SECURITY_CODE_CARD", "CANCELED", "", "2", mCardVaultPresenter.getPublicKey(),
 //                    siteId, BuildConfig.VERSION_NAME, this);
             mCardVaultPresenter.onResultCancel();
         }

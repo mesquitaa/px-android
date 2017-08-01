@@ -1,4 +1,4 @@
-package com.mercadopago.util;
+package com.mercadopago.px_tracking.utils;
 
 
 

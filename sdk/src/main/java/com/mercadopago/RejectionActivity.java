@@ -25,7 +25,7 @@ import com.mercadopago.providers.MPTrackingProvider;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.TrackingUtil;
+import com.mercadopago.px_tracking.utils.TrackingUtil;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -181,7 +181,7 @@ public class RejectionActivity extends MercadoPagoBaseActivity implements TimerO
         }
 
         ScreenViewEvent event = builder.build();
-        mpTrackingProvider.addTrackEvent(event);
+        mpTrackingProvider.trackEvent(event);
     }
 
     private void setPaymentResultScreenPreferenceData() {
@@ -410,7 +410,7 @@ public class RejectionActivity extends MercadoPagoBaseActivity implements TimerO
 
     @Override
     public void onBackPressed() {
-//        MPTracker.getInstance().trackEvent("REJECTION", "BACK_PRESSED", "", "2", mMerchantPublicKey, "", BuildConfig.VERSION_NAME, this);
+//        MPTracker.getInstance().trackEvents("REJECTION", "BACK_PRESSED", "", "2", mMerchantPublicKey, "", BuildConfig.VERSION_NAME, this);
 
         if (mBackPressedOnce) {
             finishWithOkResult();
@@ -442,7 +442,7 @@ public class RejectionActivity extends MercadoPagoBaseActivity implements TimerO
 
     public void onClickRejectionOptionButton() {
         if (isPaymentStatusDetailRecoverable()) {
-//            MPTracker.getInstance().trackEvent("REJECTION", "RECOVER_PAYMENT", "", "2", mMerchantPublicKey, "", BuildConfig.VERSION_NAME, this);
+//            MPTracker.getInstance().trackEvents("REJECTION", "RECOVER_PAYMENT", "", "2", mMerchantPublicKey, "", BuildConfig.VERSION_NAME, this);
 
             Intent returnIntent = new Intent();
             mNextAction = PaymentResultAction.RECOVER_PAYMENT;
@@ -450,7 +450,7 @@ public class RejectionActivity extends MercadoPagoBaseActivity implements TimerO
             setResult(RESULT_CANCELED, returnIntent);
             finish();
         } else {
-//            MPTracker.getInstance().trackEvent("REJECTION", "SELECT_OTHER_PAYMENT_METHOD", "", "2", mMerchantPublicKey, "", BuildConfig.VERSION_NAME, this);
+//            MPTracker.getInstance().trackEvents("REJECTION", "SELECT_OTHER_PAYMENT_METHOD", "", "2", mMerchantPublicKey, "", BuildConfig.VERSION_NAME, this);
 
             Intent returnIntent = new Intent();
             mNextAction = PaymentResultAction.SELECT_OTHER_PAYMENT_METHOD;

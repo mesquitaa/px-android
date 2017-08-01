@@ -28,7 +28,7 @@ task jacocoFullTestReport(type: JacocoReport, dependsOn: ['jacocoTestReport', 'c
 android {
     publishNonDefault true
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion '26'
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 25

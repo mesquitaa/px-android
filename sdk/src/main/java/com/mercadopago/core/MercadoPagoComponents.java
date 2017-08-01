@@ -9,7 +9,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 
 import com.mercadopago.BankDealsActivity;
-import com.mercadopago.BuildConfig;
 import com.mercadopago.CallForAuthorizeActivity;
 import com.mercadopago.CardVaultActivity;
 import com.mercadopago.CongratsActivity;
@@ -47,8 +46,6 @@ import com.mercadopago.model.PaymentType;
 import com.mercadopago.model.Site;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
 import com.mercadopago.preferences.ReviewScreenPreference;
-import com.mercadopago.providers.MPTrackingProvider;
-import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.uicontrollers.discounts.DiscountRowView;
 import com.mercadopago.uicontrollers.reviewandconfirm.ReviewItemsView;
 import com.mercadopago.uicontrollers.reviewandconfirm.ReviewPaymentOffView;
@@ -59,7 +56,6 @@ import com.mercadopago.uicontrollers.savedcards.SavedCardRowView;
 import com.mercadopago.uicontrollers.savedcards.SavedCardView;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.MercadoPagoUtil;
-import com.mercadopago.util.TrackingUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -264,7 +260,7 @@ public class MercadoPagoComponents {
 //                        .setScreenId(TrackingUtil.SCREEN_ID_PAYMENT_METHODS)
 //                        .setScreenName(TrackingUtil.SCREEN_NAME_PAYMENT_METHODS)
 //                        .build();
-//                mpTrackingProvider.addTrackEvent(event);
+//                mpTrackingProvider.trackEvents(event);
 
                 startPaymentVaultActivity();
             }
@@ -433,7 +429,7 @@ public class MercadoPagoComponents {
 //                        .setScreenId(TrackingUtil.SCREEN_ID_REVIEW_AND_CONFIRM)
 //                        .setScreenName(TrackingUtil.SCREEN_NAME_REVIEW_AND_CONFIRM)
 //                        .build();
-//                mpTrackingProvider.addTrackEvent(event);
+//                mpTrackingProvider.trackEvents(event);
 
 
                 startReviewAndConfirmActivity();
@@ -851,7 +847,7 @@ public class MercadoPagoComponents {
 //                        .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM)
 //                        .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM)
 //                        .build();
-//                mpTrackingProvider.addTrackEvent(event);
+//                mpTrackingProvider.trackEvents(event);
 
 
                 startGuessingCardActivity();
@@ -1452,7 +1448,7 @@ public class MercadoPagoComponents {
 //                        .setScreenId(TrackingUtil.SCREEN_ID_CONGRATS)
 //                        .setScreenName(TrackingUtil.SCREEN_NAME_CONGRATS)
 //                        .build();
-//                mpTrackingProvider.addTrackEvent(event);
+//                mpTrackingProvider.trackEvents(event);
 
 
                 startPaymentResultActivity();

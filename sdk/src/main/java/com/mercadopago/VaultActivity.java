@@ -245,7 +245,7 @@ public class VaultActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 //        String siteId = mSite == null ? "" : mSite.getId();
-//        MPTracker.getInstance().trackEvent("VAULT", "BACK_PRESSED", "", "2", mMerchantPublicKey, siteId, BuildConfig.VERSION_NAME, this);
+//        MPTracker.getInstance().trackEvents("VAULT", "BACK_PRESSED", "", "2", mMerchantPublicKey, siteId, BuildConfig.VERSION_NAME, this);
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("backButtonPressed", true);

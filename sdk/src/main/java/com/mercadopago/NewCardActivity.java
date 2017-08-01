@@ -156,7 +156,7 @@ public class NewCardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        MPTracker.getInstance().trackEvent("NEW_CARD", "BACK_PRESSED", "", "2", mKey, "", BuildConfig.VERSION_NAME, this);
+//        MPTracker.getInstance().trackEvents("NEW_CARD", "BACK_PRESSED", "", "2", mKey, "", BuildConfig.VERSION_NAME, this);
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("backButtonPressed", true);

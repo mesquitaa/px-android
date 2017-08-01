@@ -64,7 +64,6 @@ import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.presenters.GuessingCardPresenter;
 import com.mercadopago.providers.MPTrackingProvider;
-import com.mercadopago.px_tracking.MPTracker;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.uicontrollers.card.CardRepresentationModes;
 import com.mercadopago.uicontrollers.card.CardView;
@@ -79,7 +78,7 @@ import com.mercadopago.util.MPAnimationUtils;
 import com.mercadopago.util.MPCardMaskUtil;
 import com.mercadopago.util.MercadoPagoUtil;
 import com.mercadopago.util.ScaleUtil;
-import com.mercadopago.util.TrackingUtil;
+import com.mercadopago.px_tracking.utils.TrackingUtil;
 import com.mercadopago.views.GuessingCardActivityView;
 
 import java.lang.reflect.Type;
@@ -453,7 +452,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM + " " + paymentTypeId)
                 .build();
 
-        mpTrackingProvider.addTrackEvent(event);
+        mpTrackingProvider.trackEvent(event);
     }
 
     protected void trackCardNumber() {
@@ -468,7 +467,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId + TrackingUtil.CARD_NUMBER)
                 .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM + " " + paymentTypeId + " " + TrackingUtil.CARD_NUMBER_NAME)
                 .build();
-        mpTrackingProvider.addTrackEvent(event);
+        mpTrackingProvider.trackEvent(event);
     }
 
     protected void trackCardHolderName() {
@@ -483,7 +482,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId + TrackingUtil.CARD_HOLDER_NAME)
                 .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM + " " + paymentTypeId + " " + TrackingUtil.CARD_HOLDER_NAME_NAME)
                 .build();
-        mpTrackingProvider.addTrackEvent(event);
+        mpTrackingProvider.trackEvent(event);
     }
 
     protected void trackCardExpiryDate() {
@@ -498,7 +497,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId + TrackingUtil.CARD_EXPIRATION_DATE)
                 .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM + " " + paymentTypeId + " " + TrackingUtil.CARD_EXPIRATION_DATE_NAME)
                 .build();
-        mpTrackingProvider.addTrackEvent(event);
+        mpTrackingProvider.trackEvent(event);
     }
 
     protected void trackCardSecurityCode() {
@@ -513,7 +512,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId + TrackingUtil.CARD_SECURITY_CODE)
                 .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM + " " + paymentTypeId + " " + TrackingUtil.CARD_SECURITY_CODE_NAME)
                 .build();
-        mpTrackingProvider.addTrackEvent(event);
+        mpTrackingProvider.trackEvent(event);
     }
 
     protected void trackCardIdentification() {
@@ -528,7 +527,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
                 .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM + paymentTypeId + TrackingUtil.CARD_IDENTIFICATION)
                 .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM + " " + paymentTypeId + " " + TrackingUtil.CARD_IDENTIFICATION_NAME)
                 .build();
-        mpTrackingProvider.addTrackEvent(event);
+        mpTrackingProvider.trackEvent(event);
     }
 
     private void initializeViews() {
@@ -1673,7 +1672,7 @@ public class GuessingCardActivity extends MercadoPagoBaseActivity implements Gue
     public void onBackPressed() {
         checkFlipCardToFront();
 
-//        MPTracker.getInstance().trackEvent("GUESSING_CARD", "BACK_PRESSED", "", "2", mPresenter.getPublicKey(),
+//        MPTracker.getInstance().trackEvents("GUESSING_CARD", "BACK_PRESSED", "", "2", mPresenter.getPublicKey(),
 //                "", BuildConfig.VERSION_NAME, this);
         Intent returnIntent = new Intent();
         returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));

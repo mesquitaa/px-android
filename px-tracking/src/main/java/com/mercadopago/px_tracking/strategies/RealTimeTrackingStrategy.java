@@ -14,7 +14,7 @@ public class RealTimeTrackingStrategy implements TrackingStrategy {
     }
 
     @Override
-    public void trackEvents(EventTrackIntent eventTrackIntent, Context context) {
-        trackingService.trackEvent(eventTrackIntent, context);
+    public void trackEvent(EventTrackIntent eventTrackIntent, Context context) {
+        trackingService.trackEvents(eventTrackIntent, context);
     }
 }

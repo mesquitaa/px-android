@@ -24,7 +24,7 @@ public class MPMockedTrackingService implements MPTrackingService {
     }
 
     @Override
-    public void trackEvent(EventTrackIntent eventTrackIntent, Context context) {
+    public void trackEvents(EventTrackIntent eventTrackIntent, Context context) {
 
     }
 }

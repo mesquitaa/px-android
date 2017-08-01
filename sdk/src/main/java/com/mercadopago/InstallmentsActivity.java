@@ -473,7 +473,7 @@ public class InstallmentsActivity extends MercadoPagoBaseActivity implements Ins
             mPresenter.initializeDiscountRow();
         } else {
 //            String siteId = mSite == null ? "" : mSite.getId();
-//            MPTracker.getInstance().trackEvent("CARD_INSTALLMENTS", "BACK_PRESSED", "", "2", mPublicKey, siteId, BuildConfig.VERSION_NAME, this);
+//            MPTracker.getInstance().trackEvents("CARD_INSTALLMENTS", "BACK_PRESSED", "", "2", mPublicKey, siteId, BuildConfig.VERSION_NAME, this);
             Intent returnIntent = new Intent();
             returnIntent.putExtra("backButtonPressed", true);
             returnIntent.putExtra("discount", JsonUtil.getInstance().toJson(mPresenter.getDiscount()));

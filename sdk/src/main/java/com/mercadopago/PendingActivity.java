@@ -34,7 +34,7 @@ import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.util.ColorsUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
-import com.mercadopago.util.TrackingUtil;
+import com.mercadopago.px_tracking.utils.TrackingUtil;
 
 import java.util.List;
 
@@ -178,7 +178,7 @@ public class PendingActivity extends MercadoPagoBaseActivity implements TimerObs
         }
 
         ScreenViewEvent event = builder.build();
-        mpTrackingProvider.addTrackEvent(event);
+        mpTrackingProvider.trackEvent(event);
     }
 
     private void setPaymentResultScreenPreferenceData() {
@@ -375,7 +375,7 @@ public class PendingActivity extends MercadoPagoBaseActivity implements TimerObs
 
     @Override
     public void onBackPressed() {
-//        MPTracker.getInstance().trackEvent("PENDING", "BACK_PRESSED", "", "2", mMerchantPublicKey, "", BuildConfig.VERSION_NAME, this);
+//        MPTracker.getInstance().trackEvents("PENDING", "BACK_PRESSED", "", "2", mMerchantPublicKey, "", BuildConfig.VERSION_NAME, this);
 
         if (mBackPressedOnce) {
             finishWithOkResult();
@@ -387,7 +387,7 @@ public class PendingActivity extends MercadoPagoBaseActivity implements TimerObs
     }
 
     public void onClickPendingOptionButton() {
-//        MPTracker.getInstance().trackEvent("PENDING", "SELECT_OTHER_PAYMENT_METHOD", "", "2", mMerchantPublicKey, "", BuildConfig.VERSION_NAME, this);
+//        MPTracker.getInstance().trackEvents("PENDING", "SELECT_OTHER_PAYMENT_METHOD", "", "2", mMerchantPublicKey, "", BuildConfig.VERSION_NAME, this);
 
         Intent returnIntent = new Intent();
         returnIntent.putExtra("nextAction", PaymentResultAction.SELECT_OTHER_PAYMENT_METHOD);
