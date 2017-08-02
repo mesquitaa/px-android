@@ -35,7 +35,7 @@ import static android.text.TextUtils.isEmpty;
 public class MPTracker {
 
     private static MPTracker mMPTrackerInstance;
-    private final EventsDatabaseImpl database;
+    private EventsDatabaseImpl database;
 
     private TracksListener mTracksListener;
 
@@ -55,9 +55,9 @@ public class MPTracker {
     private Boolean trackerInitialized = false;
 
     private TrackingStrategy trackingStrategy;
+    private Event mEvent;
 
     protected MPTracker() {
-        this.database = new EventsDatabaseImpl(mContext);
     }
 
     synchronized public static MPTracker getInstance() {
@@ -139,6 +139,7 @@ public class MPTracker {
 
         initializeMPTrackingService();
 
+        mEvent = event;
         database.persist(event);
 
         getTrackingStrategy(context, event);
@@ -189,6 +190,7 @@ public class MPTracker {
                 this.mSiteId = siteId;
                 this.mSdkVersion = sdkVersion;
                 this.mContext = context;
+                this.database = new EventsDatabaseImpl(mContext);
             }
         }
     }
@@ -234,12 +236,10 @@ public class MPTracker {
 
     private TrackingStrategy getTrackingStrategy(Context context, Event event) {
 
-        if (trackingStrategy == null) {
-            if (hasBatchStrategyScreenEvent(event)) {
-                trackingStrategy = new BatchTrackingStrategy(database, new ConnectivityCheckerImpl(context), mMPTrackingService);
-            } else if (hasForcedStrategyScreenEvent(event)) {
-                trackingStrategy = new ForcedStrategy(database, new ConnectivityCheckerImpl(context), mMPTrackingService);
-            }
+        if (hasBatchStrategyScreenEvent(event)) {
+            trackingStrategy = new BatchTrackingStrategy(database, new ConnectivityCheckerImpl(context), mMPTrackingService);
+        } else if (hasForcedStrategyScreenEvent(event)) {
+            trackingStrategy = new ForcedStrategy(database, new ConnectivityCheckerImpl(context), mMPTrackingService);
         }
 
         return trackingStrategy;
@@ -283,5 +283,13 @@ public class MPTracker {
 
     private boolean isBatchTrackingStrategyScreenEvent(ScreenViewEvent screenViewEvent) {
         return screenViewEvent.getScreenName().equals(TrackingUtil.SCREEN_NAME_PAYMENT_VAULT) || screenViewEvent.getScreenName().equals(TrackingUtil.SCREEN_NAME_REVIEW_AND_CONFIRM);
+    }
+
+    public TrackingStrategy getTrackingStrategy() {
+        return trackingStrategy;
+    }
+
+    public Event getEvent() {
+        return mEvent;
     }
 }

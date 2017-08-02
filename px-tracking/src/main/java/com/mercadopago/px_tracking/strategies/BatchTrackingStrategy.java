@@ -14,7 +14,7 @@ import retrofit2.Response;
 
 public class BatchTrackingStrategy extends TrackingStrategy {
 
-    private final static int MIN_BATCH_SIZE = 10;
+    private final static int MIN_BATCH_SIZE = 1;
 
     private final EventsDatabase database;
     private final MPTrackingService trackingService;

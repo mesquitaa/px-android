@@ -7,6 +7,8 @@ import com.mercadopago.px_tracking.model.PaymentIntent;
 import com.mercadopago.px_tracking.model.TrackingIntent;
 import com.mercadopago.px_tracking.services.MPTrackingService;
 
+import retrofit2.Callback;
+
 /**
  * Created by vaserber on 7/3/17.
  */
@@ -25,6 +27,11 @@ public class MPMockedTrackingService implements MPTrackingService {
 
     @Override
     public void trackEvents(EventTrackIntent eventTrackIntent, Context context) {
+
+    }
+
+    @Override
+    public void trackEvents(EventTrackIntent eventTrackIntent, Context context, Callback<Void> callback) {
 
     }
 }
