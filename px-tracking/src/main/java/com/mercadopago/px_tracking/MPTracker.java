@@ -9,7 +9,6 @@ import com.mercadopago.px_tracking.model.ActionEvent;
 import com.mercadopago.px_tracking.model.AppInformation;
 import com.mercadopago.px_tracking.model.DeviceInfo;
 import com.mercadopago.px_tracking.model.Event;
-import com.mercadopago.px_tracking.model.EventTrackIntent;
 import com.mercadopago.px_tracking.model.PaymentIntent;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.px_tracking.model.TrackingIntent;
@@ -24,9 +23,7 @@ import com.mercadopago.px_tracking.utils.JsonConverter;
 import com.mercadopago.px_tracking.utils.TrackingUtil;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static android.text.TextUtils.isEmpty;
@@ -38,6 +35,7 @@ import static android.text.TextUtils.isEmpty;
 public class MPTracker {
 
     private static MPTracker mMPTrackerInstance;
+    private final EventsDatabaseImpl database;
 
     private TracksListener mTracksListener;
 
@@ -59,6 +57,7 @@ public class MPTracker {
     private TrackingStrategy trackingStrategy;
 
     protected MPTracker() {
+        this.database = new EventsDatabaseImpl(mContext);
     }
 
     synchronized public static MPTracker getInstance() {
@@ -139,6 +138,8 @@ public class MPTracker {
     public void trackEvent(String clientId, AppInformation appInformation, DeviceInfo deviceInfo, Event event, Context context) {
 
         initializeMPTrackingService();
+
+        database.persist(event);
 
         getTrackingStrategy(context, event);
 
@@ -235,9 +236,9 @@ public class MPTracker {
 
         if (trackingStrategy == null) {
             if (hasBatchStrategyScreenEvent(event)) {
-                trackingStrategy = new BatchTrackingStrategy(new EventsDatabaseImpl(context), new ConnectivityCheckerImpl(context), mMPTrackingService);
+                trackingStrategy = new BatchTrackingStrategy(database, new ConnectivityCheckerImpl(context), mMPTrackingService);
             } else if (hasForcedStrategyScreenEvent(event)) {
-                trackingStrategy = new ForcedStrategy(new EventsDatabaseImpl(context), new ConnectivityCheckerImpl(context), mMPTrackingService);
+                trackingStrategy = new ForcedStrategy(database, new ConnectivityCheckerImpl(context), mMPTrackingService);
             }
         }
 

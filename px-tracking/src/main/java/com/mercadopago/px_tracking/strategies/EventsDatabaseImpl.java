@@ -51,14 +51,14 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     }
 
     @Override
-    public void addTrack(Event event) {
+    public void persist(Event event) {
         ContentValues values = new ContentValues();
         putEventInfoIntoValues(values, event);
         persistData(values);
     }
 
     @Override
-    public void addTracks(List<Event> batch) {
+    public void persist(List<Event> batch) {
         ContentValues values = new ContentValues();
         for (Event event : batch) {
             putEventInfoIntoValues(values, event);

@@ -9,7 +9,9 @@ import java.util.List;
 
 public interface EventsDatabase {
 
-    void addTrack(Event event);
+    void persist(Event event);
+
+    void persist(List<Event> batch);
 
     Integer getBatchSize();
 
@@ -17,5 +19,4 @@ public interface EventsDatabase {
 
     void clearExpiredTracks();
 
-    void addTracks(List<Event> batch);
 }

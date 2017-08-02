@@ -14,13 +14,38 @@ public class ConnectivityCheckerImpl implements ConnectivityChecker {
     @Override
     public boolean hasConnection() {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected()) {
+        NetworkInfo networkInfo = getAvailableNetworkInfo();
+
+        if (networkInfo != null) {
             return true;
         }
 
         return false;
+    }
+
+    @Override
+    public boolean hasWifiConnection() {
+
+        NetworkInfo networkInfo = getAvailableNetworkInfo();
+
+        if (networkInfo != null && hasWifiNetwork(networkInfo)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean hasWifiNetwork(NetworkInfo networkInfo) {
+        return networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
+    }
+
+    private NetworkInfo getAvailableNetworkInfo() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected()) {
+            return networkInfo;
+        }
+        return null;
     }
 
 }

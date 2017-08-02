@@ -1,9 +1,7 @@
 package com.mercadopago.px_tracking.strategies;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.mercadopago.px_tracking.model.AppInformation;
 import com.mercadopago.px_tracking.model.Event;
 import com.mercadopago.px_tracking.model.EventTrackIntent;
 import com.mercadopago.px_tracking.services.MPTrackingService;
@@ -30,7 +28,6 @@ public class BatchTrackingStrategy extends TrackingStrategy {
 
     @Override
     public void trackEvent(Event event, Context context) {
-        database.addTrack(event);
         performTrackAttempt(context);
     }
 
@@ -45,7 +42,7 @@ public class BatchTrackingStrategy extends TrackingStrategy {
     }
 
     private boolean isConnectivityOk() {
-        return connectivityChecker.hasConnection();
+        return connectivityChecker.hasWifiConnection();
     }
 
     private boolean isDataReady() {
@@ -54,18 +51,22 @@ public class BatchTrackingStrategy extends TrackingStrategy {
 
     private void sendTracksBatch(final Context context) {
         final List<Event> batch = database.retrieveBatch();
-        EventTrackIntent intent = new EventTrackIntent(getClientId(),getAppInformation(),getDeviceInfo(),batch);
+        EventTrackIntent intent = new EventTrackIntent(getClientId(), getAppInformation(), getDeviceInfo(), batch);
         trackingService.trackEvents(intent, context, new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (!response.isSuccessful()){
-                    database.addTracks(batch);
+                if (!response.isSuccessful()) {
+                    database.persist(batch);
+
+                    if (response.code() == 513) {
+                        performTrackAttempt(context);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                database.addTracks(batch);
+                database.persist(batch);
             }
         });
     }

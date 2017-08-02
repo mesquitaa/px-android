@@ -29,7 +29,6 @@ public class ForcedStrategy extends TrackingStrategy {
 
     @Override
     public void trackEvent(Event event, Context context) {
-        database.addTrack(event);
         performTrackAttempt(context);
     }
 
@@ -50,20 +49,24 @@ public class ForcedStrategy extends TrackingStrategy {
 
     private void sendTracksBatch(final Context context) {
         final List<Event> batch = database.retrieveBatch();
-        EventTrackIntent intent = new EventTrackIntent(getClientId(),getAppInformation(),getDeviceInfo(),batch);
+        EventTrackIntent intent = new EventTrackIntent(getClientId(), getAppInformation(), getDeviceInfo(), batch);
         trackingService.trackEvents(intent, context, new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     performTrackAttempt(context);
-                }else{
-                    database.addTracks(batch);
+                } else {
+                    database.persist(batch);
+
+                    if (response.code() == 513) {
+                        performTrackAttempt(context);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                database.addTracks(batch);
+                database.persist(batch);
             }
         });
     }
