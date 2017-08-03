@@ -43,7 +43,7 @@ import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.presenters.PaymentVaultPresenter;
-import com.mercadopago.providers.MPTrackingProvider;
+import com.mercadopago.tracker.MPTrackingContext;
 import com.mercadopago.providers.PaymentVaultProviderImpl;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.uicontrollers.FontCache;
@@ -229,16 +229,17 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
 
     @Override
     public void trackInitialScreen() {
-        MPTrackingProvider mpTrackingProvider = new MPTrackingProvider.Builder()
+        MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder()
                 .setContext(this)
                 .setCheckoutVersion(BuildConfig.VERSION_NAME)
+                .setTrackingStrategy(TrackingUtil.BATCH_STRATEGY)
                 .setPublicKey(mPublicKey)
                 .build();
         ScreenViewEvent event = new ScreenViewEvent.Builder()
                 .setScreenId(TrackingUtil.SCREEN_ID_PAYMENT_VAULT)
                 .setScreenName(TrackingUtil.SCREEN_NAME_PAYMENT_VAULT)
                 .build();
-        mpTrackingProvider.trackEvent(event);
+        mpTrackingContext.trackEvent(event);
     }
 
     @Override
@@ -246,10 +247,11 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
         PaymentMethodSearchItem selectedItem = mPaymentVaultPresenter.getSelectedSearchItem();
         String selectedItemId = selectedItem.getId();
 
-        MPTrackingProvider mpTrackingProvider = new MPTrackingProvider.Builder()
+        MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder()
                 .setContext(this)
                 .setCheckoutVersion(BuildConfig.VERSION_NAME)
                 .setPublicKey(mPublicKey)
+                .setTrackingStrategy(TrackingUtil.BATCH_STRATEGY)
                 .build();
 
         ScreenViewEvent event = null;
@@ -276,7 +278,7 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
                     .build();
         }
 
-        mpTrackingProvider.trackEvent(event);
+        mpTrackingContext.trackEvent(event);
     }
 
     private void showTimer() {

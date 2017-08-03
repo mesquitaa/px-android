@@ -14,13 +14,10 @@ import retrofit2.Response;
 
 public class ForcedStrategy extends TrackingStrategy {
 
-    private final static int MIN_BATCH_SIZE = 10;
-
     private final EventsDatabase database;
     private final MPTrackingService trackingService;
     private final ConnectivityChecker connectivityChecker;
 
-    //TODO
     public ForcedStrategy(EventsDatabase database, ConnectivityChecker connectivityChecker, MPTrackingService trackingService) {
         this.database = database;
         this.trackingService = trackingService;

@@ -12,12 +12,12 @@ import com.mercadopago.px_tracking.model.AppInformation;
 import com.mercadopago.px_tracking.model.DeviceInfo;
 import com.mercadopago.px_tracking.model.ErrorEvent;
 import com.mercadopago.px_tracking.model.Event;
-import com.mercadopago.px_tracking.model.EventTrackIntent;
 import com.mercadopago.px_tracking.model.PaymentIntent;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.px_tracking.model.StackTraceInfo;
 import com.mercadopago.px_tracking.model.TrackingIntent;
 import com.mercadopago.px_tracking.strategies.TrackingStrategy;
+import com.mercadopago.px_tracking.utils.TrackingUtil;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -114,7 +114,8 @@ public class MPTrackerTest {
 
             }
         });
-        MPTracker.getInstance().trackEvent(MOCKED_CLIENT_ID, appInformation, deviceInfo, screenViewEvent, appContext);
+
+        MPTracker.getInstance().trackEvent(MOCKED_CLIENT_ID, appInformation, deviceInfo, screenViewEvent, appContext, TrackingUtil.BATCH_STRATEGY);
 
         TrackingStrategy strategy = MPTracker.getInstance().getTrackingStrategy();
 
@@ -173,7 +174,7 @@ public class MPTrackerTest {
             }
         });
 
-        MPTracker.getInstance().trackEvent(MOCKED_CLIENT_ID, appInformation, deviceInfo, actionEvent, appContext);
+        MPTracker.getInstance().trackEvent(MOCKED_CLIENT_ID, appInformation, deviceInfo, actionEvent, appContext, TrackingUtil.BATCH_STRATEGY);
 
         TrackingStrategy strategy = MPTracker.getInstance().getTrackingStrategy();
 
@@ -223,7 +224,7 @@ public class MPTrackerTest {
             }
         });
 
-        MPTracker.getInstance().trackEvent(MOCKED_CLIENT_ID, appInformation, deviceInfo, errorEvent, appContext);
+        MPTracker.getInstance().trackEvent(MOCKED_CLIENT_ID, appInformation, deviceInfo, errorEvent, appContext, null);
 
         TrackingStrategy strategy = MPTracker.getInstance().getTrackingStrategy();
 
@@ -340,7 +341,7 @@ public class MPTrackerTest {
             }
         });
 
-        MPTracker.getInstance().trackEvent(MOCKED_CLIENT_ID, appInformation, deviceInfo, errorEvent, appContext);
+        MPTracker.getInstance().trackEvent(MOCKED_CLIENT_ID, appInformation, deviceInfo, errorEvent, appContext, null);
 
         TrackingStrategy strategy = MPTracker.getInstance().getTrackingStrategy();
 

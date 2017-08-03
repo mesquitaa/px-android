@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.mercadopago.controllers.CheckoutErrorHandler;
 import com.mercadopago.exceptions.MercadoPagoError;
-import com.mercadopago.providers.MPTrackingProvider;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.ErrorUtil;
 import com.mercadopago.util.JsonUtil;
@@ -55,7 +54,7 @@ public class ErrorActivity extends MercadoPagoBaseActivity {
     }
 
     private void trackScreen() {
-//        MPTrackingProvider mpTrackingProvider = new MPTrackingProvider.Builder()
+//        MPTrackingContext mpTrackingProvider = new MPTrackingContext.Builder()
 //                .setContext(this)
 //                .setCheckoutVersion(BuildConfig.VERSION_NAME)
 //                .setPublicKey(mMerchantPublicKey)

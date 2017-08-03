@@ -17,7 +17,7 @@ import com.mercadopago.model.PaymentResultAction;
 import com.mercadopago.model.Site;
 import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
-import com.mercadopago.providers.MPTrackingProvider;
+import com.mercadopago.tracker.MPTrackingContext;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.util.CurrenciesUtil;
 import com.mercadopago.util.ErrorUtil;
@@ -168,10 +168,11 @@ public class CallForAuthorizeActivity extends MercadoPagoBaseActivity implements
     }
 
     protected void trackScreen() {
-        MPTrackingProvider mpTrackingProvider = new MPTrackingProvider.Builder()
+        MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder()
                 .setContext(this)
                 .setCheckoutVersion(BuildConfig.VERSION_NAME)
                 .setPublicKey(mMerchantPublicKey)
+                .setTrackingStrategy(TrackingUtil.FORCED_STRATEGY)
                 .build();
 
         ScreenViewEvent.Builder builder = new ScreenViewEvent.Builder()
@@ -193,7 +194,7 @@ public class CallForAuthorizeActivity extends MercadoPagoBaseActivity implements
         }
 
         ScreenViewEvent event = builder.build();
-        mpTrackingProvider.trackEvent(event);
+        mpTrackingContext.trackEvent(event);
     }
 
     private void showTimer() {

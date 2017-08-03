@@ -29,6 +29,8 @@ import com.mercadopago.model.Setting;
 import com.mercadopago.model.Token;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.px_tracking.MPTracker;
+import com.mercadopago.px_tracking.utils.TrackingUtil;
+import com.mercadopago.tracker.MPTrackingContext;
 import com.mercadopago.uicontrollers.card.CardView;
 import com.mercadopago.uicontrollers.card.FrontCardView;
 import com.mercadopago.util.CurrenciesUtil;
@@ -115,6 +117,7 @@ public class GuessingCardPresenter {
     private String mPrivateKey;
     private int mCurrentNumberLength;
     private Issuer mIssuer;
+    private MPTrackingContext mTrackingContext;
 
 
     public GuessingCardPresenter(Context context) {
@@ -1079,5 +1082,21 @@ public class GuessingCardPresenter {
         } else {
             mView.finishCardFlow(mPaymentMethod, mToken, mDiscount, mDirectDiscountEnabled, mIssuer, payerCosts);
         }
+    }
+
+    public MPTrackingContext getTrackingContext(){
+        if(mTrackingContext==null){
+            mTrackingContext = new MPTrackingContext.Builder()
+                    .setContext(mContext)
+                    .setCheckoutVersion(BuildConfig.VERSION_NAME)
+                    .setTrackingStrategy(TrackingUtil.BATCH_STRATEGY)
+                    .setPublicKey(mPublicKey)
+                    .build();
+        }
+        return mTrackingContext;
+    }
+
+    public void setTrackingContext(MPTrackingContext trackingContext) {
+        this.mTrackingContext = trackingContext;
     }
 }

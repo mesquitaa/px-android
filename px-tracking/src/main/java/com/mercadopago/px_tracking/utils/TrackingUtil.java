@@ -1,6 +1,7 @@
 package com.mercadopago.px_tracking.utils;
 
 
+import com.mercadopago.px_tracking.strategies.TrackingStrategy;
 
 /**
  * Created by vaserber on 6/5/17.
@@ -73,4 +74,6 @@ public class TrackingUtil {
     //Default values
     public static final String HAS_SHIPPING_DEFAULT_VALUE = "false";
     public static final String IS_EXPRESS_DEFAULT_VALUE = "false";
+    public static final String BATCH_STRATEGY = "batch_strategy";
+    public static final String FORCED_STRATEGY = "forced_strategy";
 }

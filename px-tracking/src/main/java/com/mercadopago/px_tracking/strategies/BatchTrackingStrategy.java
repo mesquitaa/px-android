@@ -6,6 +6,7 @@ import com.mercadopago.px_tracking.model.Event;
 import com.mercadopago.px_tracking.model.EventTrackIntent;
 import com.mercadopago.px_tracking.services.MPTrackingService;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import retrofit2.Call;
@@ -14,11 +15,12 @@ import retrofit2.Response;
 
 public class BatchTrackingStrategy extends TrackingStrategy {
 
-    private final static int MIN_BATCH_SIZE = 1;
+    private static final long MAX_AGEING = 15;
 
     private final EventsDatabase database;
     private final MPTrackingService trackingService;
     private final ConnectivityChecker connectivityChecker;
+    private int nextTrackAge;
 
     public BatchTrackingStrategy(EventsDatabase database, ConnectivityChecker connectivityChecker, MPTrackingService trackingService) {
         this.database = database;
@@ -46,7 +48,7 @@ public class BatchTrackingStrategy extends TrackingStrategy {
     }
 
     private boolean isDataReady() {
-        return database.getBatchSize() >= MIN_BATCH_SIZE;
+        return getNextTrackAge() >= MAX_AGEING;
     }
 
     private void sendTracksBatch(final Context context) {
@@ -69,5 +71,14 @@ public class BatchTrackingStrategy extends TrackingStrategy {
                 database.persist(batch);
             }
         });
+    }
+
+    public Timestamp getCurrentTimestamp() {
+        return new Timestamp(System.currentTimeMillis());
+    }
+
+    public long getNextTrackAge() {
+        long result = (getCurrentTimestamp().getTime() - database.getNextTrackTimestamp().getTime())/1000 ;
+        return result;
     }
 }

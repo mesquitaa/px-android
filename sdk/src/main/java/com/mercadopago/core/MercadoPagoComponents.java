@@ -250,18 +250,6 @@ public class MercadoPagoComponents {
                 if (this.merchantPublicKey == null && this.payerAccessToken == null)
                     throw new IllegalStateException("key is null");
 
-                //TODO sacar: testing tracker
-//                MPTrackingProvider mpTrackingProvider = new MPTrackingProvider.Builder()
-//                        .setContext(activity.getApplicationContext())
-//                        .setCheckoutVersion(BuildConfig.VERSION_NAME)
-//                        .setPublicKey(merchantPublicKey)
-//                        .build();
-//                ScreenViewEvent event = new ScreenViewEvent.Builder()
-//                        .setScreenId(TrackingUtil.SCREEN_ID_PAYMENT_METHODS)
-//                        .setScreenName(TrackingUtil.SCREEN_NAME_PAYMENT_METHODS)
-//                        .build();
-//                mpTrackingProvider.trackEvents(event);
-
                 startPaymentVaultActivity();
             }
 
@@ -418,19 +406,6 @@ public class MercadoPagoComponents {
                         throw new IllegalStateException("payer cost is null");
                     if (this.token == null) throw new IllegalStateException("token is null");
                 }
-
-                //TODO sacar: testing tracker
-//                MPTrackingProvider mpTrackingProvider = new MPTrackingProvider.Builder()
-//                        .setContext(activity.getApplicationContext())
-//                        .setCheckoutVersion(BuildConfig.VERSION_NAME)
-//                        .setPublicKey(merchantPublicKey)
-//                        .build();
-//                ScreenViewEvent event = new ScreenViewEvent.Builder()
-//                        .setScreenId(TrackingUtil.SCREEN_ID_REVIEW_AND_CONFIRM)
-//                        .setScreenName(TrackingUtil.SCREEN_NAME_REVIEW_AND_CONFIRM)
-//                        .build();
-//                mpTrackingProvider.trackEvents(event);
-
 
                 startReviewAndConfirmActivity();
             }
@@ -836,18 +811,6 @@ public class MercadoPagoComponents {
                 if (this.activity == null) throw new IllegalStateException("activity is null");
                 if (this.merchantPublicKey == null && this.payerAccessToken == null)
                     throw new IllegalStateException("key is null");
-
-                //TODO sacar: testing tracker
-//                MPTrackingProvider mpTrackingProvider = new MPTrackingProvider.Builder()
-//                        .setContext(activity.getApplicationContext())
-//                        .setCheckoutVersion(BuildConfig.VERSION_NAME)
-//                        .setPublicKey(merchantPublicKey)
-//                        .build();
-//                ScreenViewEvent event = new ScreenViewEvent.Builder()
-//                        .setScreenId(TrackingUtil.SCREEN_ID_CARD_FORM)
-//                        .setScreenName(TrackingUtil.SCREEN_NAME_CARD_FORM)
-//                        .build();
-//                mpTrackingProvider.trackEvents(event);
 
 
                 startGuessingCardActivity();
@@ -1437,19 +1400,6 @@ public class MercadoPagoComponents {
                     throw new IllegalStateException("payment result is null");
                 if (this.merchantPublicKey == null)
                     throw new IllegalStateException("public key is null");
-
-                //TODO sacar: testing tracker
-//                MPTrackingProvider mpTrackingProvider = new MPTrackingProvider.Builder()
-//                        .setContext(activity.getApplicationContext())
-//                        .setCheckoutVersion(BuildConfig.VERSION_NAME)
-//                        .setPublicKey(merchantPublicKey)
-//                        .build();
-//                ScreenViewEvent event = new ScreenViewEvent.Builder()
-//                        .setScreenId(TrackingUtil.SCREEN_ID_CONGRATS)
-//                        .setScreenName(TrackingUtil.SCREEN_NAME_CONGRATS)
-//                        .build();
-//                mpTrackingProvider.trackEvents(event);
-
 
                 startPaymentResultActivity();
             }

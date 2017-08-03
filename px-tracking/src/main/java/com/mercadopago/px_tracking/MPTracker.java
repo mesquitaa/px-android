@@ -128,27 +128,27 @@ public class MPTracker {
 
     /**
      * This method tracks a list of events in one request
-     *
-     * @param clientId       Id that identifies the client that is using the SDK
+     *  @param clientId       Id that identifies the client that is using the SDK
      * @param appInformation Info about this application and SDK integration
      * @param deviceInfo     Info about the device that is using the app
      * @param event          Event to track
      * @param context        Application context
+     * @param trackingStrategy
      */
-    public void trackEvent(String clientId, AppInformation appInformation, DeviceInfo deviceInfo, Event event, Context context) {
+    public void trackEvent(String clientId, AppInformation appInformation, DeviceInfo deviceInfo, Event event, Context context, String trackingStrategy) {
 
         initializeMPTrackingService();
 
         mEvent = event;
         database.persist(event);
 
-        getTrackingStrategy(context, event);
+        setTrackingStrategy(context, event, trackingStrategy);
 
-        if (trackingStrategy != null) {
-            trackingStrategy.trackEvent(event, context);
-            trackingStrategy.setClientId(clientId);
-            trackingStrategy.setAppInformation(appInformation);
-            trackingStrategy.setDeviceInfo(deviceInfo);
+        if (this.trackingStrategy != null) {
+            this.trackingStrategy.trackEvent(event, context);
+            this.trackingStrategy.setClientId(clientId);
+            this.trackingStrategy.setAppInformation(appInformation);
+            this.trackingStrategy.setDeviceInfo(deviceInfo);
         }
 
         if (event.getType().equals(Event.TYPE_ACTION)) {
@@ -234,43 +234,25 @@ public class MPTracker {
         return paymentTypeId.equals("credit_card") || paymentTypeId.equals("debit_card") || paymentTypeId.equals("prepaid_card");
     }
 
-    private TrackingStrategy getTrackingStrategy(Context context, Event event) {
+    private TrackingStrategy setTrackingStrategy(Context context, Event event, String strategy) {
 
-        if (hasBatchStrategyScreenEvent(event)) {
+        if (isBatchStrategy(strategy)) {
             trackingStrategy = new BatchTrackingStrategy(database, new ConnectivityCheckerImpl(context), mMPTrackingService);
-        } else if (hasForcedStrategyScreenEvent(event)) {
+        } else if (isForcedStrategy(strategy)) {
             trackingStrategy = new ForcedStrategy(database, new ConnectivityCheckerImpl(context), mMPTrackingService);
         }
 
         return trackingStrategy;
     }
 
-    private boolean hasForcedStrategyScreenEvent(Event event) {
-        boolean hasForcedStrategyScreenEvent = false;
-        if (event instanceof ScreenViewEvent) {
-            ScreenViewEvent screenViewEvent = (ScreenViewEvent) event;
-            if (isForcedStrategyScreenEvent(screenViewEvent)) {
-                hasForcedStrategyScreenEvent = true;
-            }
-        }
-        return hasForcedStrategyScreenEvent;
+    private boolean isForcedStrategy(String strategy) {
+        return strategy!=null && strategy.equals(TrackingUtil.FORCED_STRATEGY);
     }
 
-    private boolean hasBatchStrategyScreenEvent(Event event) {
-        boolean hasBatchStrategyScreenEvent = false;
-        if (event instanceof ScreenViewEvent) {
-            ScreenViewEvent screenViewEvent = (ScreenViewEvent) event;
-
-            if (isBatchTrackingStrategyScreenEvent(screenViewEvent)) {
-                hasBatchStrategyScreenEvent = true;
-            }
-        }
-        return hasBatchStrategyScreenEvent;
+    private boolean isBatchStrategy(String strategy) {
+        return strategy!=null && strategy.equals(TrackingUtil.BATCH_STRATEGY);
     }
 
-    private boolean isForcedStrategyScreenEvent(ScreenViewEvent screenViewEvent) {
-        return isErrorScreen(screenViewEvent.getScreenName()) || isResultScreen(screenViewEvent.getScreenName());
-    }
 
     private boolean isErrorScreen(String name) {
         return name.equals(TrackingUtil.SCREEN_NAME_ERROR);
@@ -281,15 +263,19 @@ public class MPTracker {
                 name.equals(TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_INSTRUCTIONS);
     }
 
-    private boolean isBatchTrackingStrategyScreenEvent(ScreenViewEvent screenViewEvent) {
-        return screenViewEvent.getScreenName().equals(TrackingUtil.SCREEN_NAME_PAYMENT_VAULT) || screenViewEvent.getScreenName().equals(TrackingUtil.SCREEN_NAME_REVIEW_AND_CONFIRM);
-    }
-
-    public TrackingStrategy getTrackingStrategy() {
+    public TrackingStrategy setTrackingStrategy() {
         return trackingStrategy;
     }
 
     public Event getEvent() {
         return mEvent;
+    }
+
+    public void clearExpiredTracks() {
+        this.database.clearExpiredTracks();
+    }
+
+    public TrackingStrategy getTrackingStrategy() {
+        return trackingStrategy;
     }
 }

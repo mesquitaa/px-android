@@ -41,7 +41,7 @@ import com.mercadopago.observers.TimerObserver;
 import com.mercadopago.preferences.DecorationPreference;
 import com.mercadopago.preferences.ReviewScreenPreference;
 import com.mercadopago.presenters.ReviewAndConfirmPresenter;
-import com.mercadopago.providers.MPTrackingProvider;
+import com.mercadopago.tracker.MPTrackingContext;
 import com.mercadopago.providers.ReviewAndConfirmProviderImpl;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.uicontrollers.FontCache;
@@ -249,10 +249,11 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
 
     @Override
     public void trackScreen() {
-        MPTrackingProvider mpTrackingProvider = new MPTrackingProvider.Builder()
+        MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder()
                 .setContext(this)
                 .setCheckoutVersion(BuildConfig.VERSION_NAME)
                 .setPublicKey(mPublicKey)
+                .setTrackingStrategy(TrackingUtil.BATCH_STRATEGY)
                 .build();
 
         PaymentData paymentData = mPresenter.getPaymentData();
@@ -272,7 +273,7 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
             }
 
             ScreenViewEvent event = builder.build();
-            mpTrackingProvider.trackEvent(event);
+            mpTrackingContext.trackEvent(event);
         }
     }
 

@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.mercadopago.px_tracking.model.Event;
 import com.mercadopago.px_tracking.model.EventTrackIntent;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface EventsDatabase {
@@ -19,4 +20,5 @@ public interface EventsDatabase {
 
     void clearExpiredTracks();
 
+    Timestamp getNextTrackTimestamp();
 }

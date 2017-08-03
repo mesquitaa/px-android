@@ -30,7 +30,7 @@ import com.mercadopago.model.ReviewSubscriber;
 import com.mercadopago.model.Reviewable;
 import com.mercadopago.model.Site;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
-import com.mercadopago.providers.MPTrackingProvider;
+import com.mercadopago.tracker.MPTrackingContext;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.uicontrollers.discounts.DiscountRowView;
 import com.mercadopago.util.ColorsUtil;
@@ -231,10 +231,11 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
     }
 
     protected void trackScreen() {
-        MPTrackingProvider mpTrackingProvider = new MPTrackingProvider.Builder()
+        MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder()
                 .setContext(this)
                 .setCheckoutVersion(BuildConfig.VERSION_NAME)
                 .setPublicKey(mMerchantPublicKey)
+                .setTrackingStrategy(TrackingUtil.FORCED_STRATEGY)
                 .build();
 
 
@@ -253,7 +254,7 @@ public class CongratsActivity extends MercadoPagoBaseActivity implements ReviewS
         }
 
         ScreenViewEvent event = builder.build();
-        mpTrackingProvider.trackEvent(event);
+        mpTrackingContext.trackEvent(event);
     }
 
     protected void onInvalidStart(String errorMessage) {

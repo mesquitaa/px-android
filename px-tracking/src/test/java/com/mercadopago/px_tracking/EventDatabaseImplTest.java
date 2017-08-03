@@ -1,10 +1,22 @@
 package com.mercadopago.px_tracking;
 
+import org.junit.Test;
+
 /**
  * Created by marlanti on 8/2/17.
  */
 
 public class EventDatabaseImplTest {
+
+    @Test
+    public void testTrackNEventStorage(){
+
+    }
+
+    @Test
+    public void testClean(){
+
+    }
         /*func testTrackNEventStorage() {
         var i = 0
         let N = TrackStorageManager.MIN_TRACKS_PER_REQUEST - 1

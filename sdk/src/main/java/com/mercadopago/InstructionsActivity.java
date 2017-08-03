@@ -30,7 +30,7 @@ import com.mercadopago.model.PaymentData;
 import com.mercadopago.model.PaymentResult;
 import com.mercadopago.model.Site;
 import com.mercadopago.preferences.PaymentResultScreenPreference;
-import com.mercadopago.providers.MPTrackingProvider;
+import com.mercadopago.tracker.MPTrackingContext;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.util.ApiUtil;
 import com.mercadopago.util.CurrenciesUtil;
@@ -180,10 +180,11 @@ public class InstructionsActivity extends MercadoPagoBaseActivity {
     }
 
     protected void trackScreen() {
-        MPTrackingProvider mpTrackingProvider = new MPTrackingProvider.Builder()
+        MPTrackingContext mpTrackingContext = new MPTrackingContext.Builder()
                 .setContext(this)
                 .setCheckoutVersion(BuildConfig.VERSION_NAME)
                 .setPublicKey(mMerchantPublicKey)
+                .setTrackingStrategy(TrackingUtil.FORCED_STRATEGY)
                 .build();
 
 
@@ -203,7 +204,7 @@ public class InstructionsActivity extends MercadoPagoBaseActivity {
         }
 
         ScreenViewEvent event = builder.build();
-        mpTrackingProvider.trackEvent(event);
+        mpTrackingContext.trackEvent(event);
     }
 
     protected void getInstructionsAsync() {

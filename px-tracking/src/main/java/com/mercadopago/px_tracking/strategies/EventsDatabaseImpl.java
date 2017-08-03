@@ -7,15 +7,14 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.mercadopago.px_tracking.model.AppInformation;
-import com.mercadopago.px_tracking.model.DeviceInfo;
 import com.mercadopago.px_tracking.model.Event;
-import com.mercadopago.px_tracking.model.EventTrackIntent;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
 import com.mercadopago.px_tracking.utils.JsonConverter;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDatabase {
@@ -25,8 +24,8 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     private static final String ID = "_id";
     private static final String TRACK_JSON = "track";
     private static final String TIMESTAMP = "timestamp";
-    private static final String MAX_DAYS = "45";
-    private static final int MAX_TRACKS = 10;
+    private static final String MAX_LIFETIME = "45";
+    private static final int MAX_BATCH_SIZE = 10;
     private static final int DATABASE_VERSION = 1;
 
     private Integer batchSizeCache = 0;
@@ -76,8 +75,6 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
         if (rowId != -1) {
             batchSizeCache++;
         }
-        //TODO sacar
-        Long count = DatabaseUtils.longForQuery(db, "SELECT COUNT(*) FROM " + TABLE_NAME, null);
         db.close();
     }
 
@@ -95,18 +92,30 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     @Override
     public void clearExpiredTracks() {
         SQLiteDatabase db = getWritableDatabase();
-        int count = db.delete(TABLE_NAME, "'EXTRACT(DAY FROM TIMESTAMP " + TIMESTAMP + ")'" + "- 'EXTRACT(DAY FROM TIMESTAMP " + new String(new Timestamp(System.currentTimeMillis()).toString()) + ")'" + " > " + MAX_DAYS, null);
+        int count = db.delete(TABLE_NAME, "'EXTRACT(DAY FROM TIMESTAMP " + TIMESTAMP + ")'" + "- 'EXTRACT(DAY FROM TIMESTAMP " + new String(new Timestamp(System.currentTimeMillis()).toString()) + ")'" + " > " + MAX_LIFETIME, null);
         batchSizeCache = batchSizeCache - count;
-        //TODO sacar
-        Long count2 = DatabaseUtils.longForQuery(db, "SELECT COUNT(*) FROM " + TABLE_NAME, null);
         db.close();
 
     }
 
     @Override
-    public List<Event> retrieveBatch() {
+    public Timestamp getNextTrackTimestamp() {
+        Timestamp timestamp = null;
+        SQLiteDatabase db = getWritableDatabase();
+        String timestampJson = DatabaseUtils.stringForQuery(db, "SELECT " + TIMESTAMP + " FROM " + TABLE_NAME + " ORDER BY " + ID + " DESC LIMIT 1", null);
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+            Date parsedDate = dateFormat.parse(timestampJson);
+            timestamp = new java.sql.Timestamp(parsedDate.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+        return timestamp;
+    }
 
-        clearExpiredTracks();
+    @Override
+    public List<Event> retrieveBatch() {
 
         SQLiteDatabase db = getReadableDatabase();
         String[] columns = {ID, TRACK_JSON};
@@ -116,16 +125,14 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
         String trackJsons;
         List<Event> events = new ArrayList<>();
 
-        Long count = DatabaseUtils.longForQuery(db, "SELECT COUNT(*) FROM " + TABLE_NAME, null);
         int retrievedTracksCount = 0;
-        while (cursor.moveToNext() && retrievedTracksCount < MAX_TRACKS) {
+        while (cursor.moveToNext() && retrievedTracksCount < MAX_BATCH_SIZE) {
             int id = cursor.getInt(0);
             trackJsons = cursor.getString(1);
             //TODO make an EventFactory for different event types.
             Event event = JsonConverter.getInstance().fromJson(trackJsons, ScreenViewEvent.class);
             events.add(event);
             deleteRow(db, id);
-            count = DatabaseUtils.longForQuery(db, "SELECT COUNT(*) FROM " + TABLE_NAME, null);
             retrievedTracksCount++;
         }
         cursor.close();
@@ -137,24 +144,6 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     private void deleteRow(SQLiteDatabase db, int id) {
         int rowsAffected = db.delete(TABLE_NAME, ID + "=" + id, null);
         batchSizeCache = batchSizeCache - rowsAffected;
-        //TODO sacar
-        Long count = DatabaseUtils.longForQuery(db, "SELECT COUNT(*) FROM " + TABLE_NAME, null);
-    }
-
-    private EventTrackIntent compressTrackPayload(List<EventTrackIntent> tracks) {
-        if (tracks != null && !tracks.isEmpty()) {
-            AppInformation appInformation = tracks.get(0).getApplication();
-            DeviceInfo deviceInfo = tracks.get(0).getDevice();
-            String clientId = tracks.get(0).getClientId();
-
-            List<Event> events = new ArrayList<>();
-            for (EventTrackIntent intent : tracks) {
-                events.addAll(intent.getEvents());
-            }
-            return new EventTrackIntent(clientId, appInformation, deviceInfo, events);
-        } else {
-            return null;
-        }
     }
 
 }
