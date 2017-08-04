@@ -1427,6 +1427,16 @@ public class CheckoutPresenterTest {
             showingReviewAndConfirm = false;
             showingPaymentResult = false;
         }
+
+        @Override
+        public void initializeMPTracker() {
+
+        }
+
+        @Override
+        public void trackScreen() {
+
+        }
     }
 
     public class MockedProvider implements CheckoutProvider {

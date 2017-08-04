@@ -43,6 +43,7 @@ import com.mercadopago.preferences.FlowPreference;
 import com.mercadopago.preferences.PaymentPreference;
 import com.mercadopago.preferences.ServicePreference;
 import com.mercadopago.presenters.PaymentVaultPresenter;
+import com.mercadopago.px_tracking.MPTracker;
 import com.mercadopago.tracker.MPTrackingContext;
 import com.mercadopago.providers.PaymentVaultProviderImpl;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
@@ -279,6 +280,11 @@ public class PaymentVaultActivity extends MercadoPagoBaseActivity implements Pay
         }
 
         mpTrackingContext.trackEvent(event);
+    }
+
+    @Override
+    public void initializeMPTracker() {
+        MPTracker.getInstance().initTracker(mPublicKey, mPaymentVaultPresenter.getSite().getId(), BuildConfig.VERSION_NAME, getApplicationContext());
     }
 
     private void showTimer() {

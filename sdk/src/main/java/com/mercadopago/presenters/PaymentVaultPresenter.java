@@ -176,6 +176,7 @@ public class PaymentVaultPresenter extends MvpPresenter<PaymentVaultView, Paymen
     }
 
     private void initPaymentMethodSearch() {
+        getView().initializeMPTracker();
         getView().trackInitialScreen();
 
         getView().setTitle(getResourcesProvider().getTitle());
