@@ -299,7 +299,7 @@ public class CheckoutPresenter extends MvpPresenter<CheckoutView, CheckoutProvid
             continuePaymentWithoutESC();
         } else {
             if (hasToStoreESC(paymentResult)) {
-                boolean wasSaved = getResourcesProvider().saveESC(paymentResult.getPaymentData().getToken().getCardId(), paymentResult.getPaymentData().getToken().getEsc());
+                getResourcesProvider().saveESC(paymentResult.getPaymentData().getToken().getCardId(), paymentResult.getPaymentData().getToken().getEsc());
             }
             if (hasToSkipPaymentResultScreen(paymentResult)) {
                 finishCheckout();

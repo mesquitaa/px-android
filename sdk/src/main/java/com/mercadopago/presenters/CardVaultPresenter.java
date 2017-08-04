@@ -1,6 +1,5 @@
 package com.mercadopago.presenters;
 
-
 import com.mercadopago.callbacks.FailureRecovery;
 import com.mercadopago.controllers.PaymentMethodGuessingController;
 import com.mercadopago.exceptions.MercadoPagoError;
@@ -465,20 +464,20 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
     public void resolveNewCardRequest(PaymentMethod paymentMethod, Token token, Boolean directDiscountEnabled, PayerCost payerCost,
                                       Issuer issuer, List<PayerCost> payerCosts, List<Issuer> issuers, Discount discount) {
 
-            setPaymentMethod(paymentMethod);
-            setToken(token);
-            setCardInfo(new CardInfo(token));
-            setDirectDiscountEnabled(directDiscountEnabled);
-            setPayerCost(payerCost);
-            setIssuer(issuer);
-            setPayerCostsList(payerCosts);
-            setIssuersList(issuers);
+        setPaymentMethod(paymentMethod);
+        setToken(token);
+        setCardInfo(new CardInfo(token));
+        setDirectDiscountEnabled(directDiscountEnabled);
+        setPayerCost(payerCost);
+        setIssuer(issuer);
+        setPayerCostsList(payerCosts);
+        setIssuersList(issuers);
 
-            if (discount != null) {
-                setDiscount(discount);
-            }
+        if (discount != null) {
+            setDiscount(discount);
+        }
 
-            checkStartIssuersActivity();
+        checkStartIssuersActivity();
     }
 
     public void onResultCancel() {
@@ -563,7 +562,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
         return mESC == null || mESC.isEmpty();
     }
 
-
     private void createESCToken() {
         if (savedCardAvailable() && !isESCEmpty()) {
 
@@ -600,7 +598,6 @@ public class CardVaultPresenter extends MvpPresenter<CardVaultView, CardVaultPro
                     } else {
                         recoverCreateESCToken(error);
                     }
-
                 }
             });
         }
