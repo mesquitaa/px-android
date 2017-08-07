@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.mercadopago.px_tracking.model.Event;
 import com.mercadopago.px_tracking.model.ScreenViewEvent;
+import com.mercadopago.px_tracking.utils.EventFactory;
 import com.mercadopago.px_tracking.utils.JsonConverter;
 
 import java.sql.Timestamp;
@@ -133,8 +134,7 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
         while (cursor.moveToNext() && retrievedTracksCount < MAX_BATCH_SIZE) {
             int id = cursor.getInt(0);
             trackJsons = cursor.getString(1);
-            //TODO make an EventFactory for different event types.
-            Event event = JsonConverter.getInstance().fromJson(trackJsons, ScreenViewEvent.class);
+            Event event = EventFactory.getEvent(trackJsons);
             events.add(event);
             deleteRow(db, id);
             retrievedTracksCount++;
