@@ -53,7 +53,7 @@ public class ForcedStrategy extends TrackingStrategy {
                 if (response.isSuccessful()) {
                     performTrackAttempt(context);
                 } else {
-                    database.persist(batch);
+                    database.returnEvents(batch);
 
                     if (response.code() == 513) {
                         performTrackAttempt(context);
@@ -63,7 +63,7 @@ public class ForcedStrategy extends TrackingStrategy {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                database.persist(batch);
+                database.returnEvents(batch);
             }
         });
     }

@@ -50,6 +50,7 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
 
     @Override
     public void persist(Event event) {
+        getBatchSize();
         ContentValues values = new ContentValues();
         putEventInfoIntoValues(values, event);
         persistData(values);
@@ -57,9 +58,13 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
 
 
     @Override
-    public void persist(List<Event> batch) {
-        for (Event event : batch) {
-            persist(event);
+    public void returnEvents(List<Event> batch) {
+        int i = batch.size();
+        Event olderEvent;
+        while(i!=0){
+            olderEvent = batch.get(i-1);
+            persist(olderEvent);
+            i--;
         }
     }
 
@@ -102,7 +107,7 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     public Timestamp getNextTrackTimestamp() {
         Timestamp timestamp = null;
         SQLiteDatabase db = getWritableDatabase();
-        String timestampJson = DatabaseUtils.stringForQuery(db, "SELECT " + TIMESTAMP + " FROM " + TABLE_NAME + " ORDER BY " + ID + " DESC LIMIT 1", null);
+        String timestampJson = DatabaseUtils.stringForQuery(db, "SELECT " + TIMESTAMP + " FROM " + TABLE_NAME + " ORDER BY " + ID + " ASC LIMIT 1", null);
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
             Date parsedDate = dateFormat.parse(timestampJson);
@@ -124,7 +129,6 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
 
         String trackJsons;
         List<Event> events = new ArrayList<>();
-
         int retrievedTracksCount = 0;
         while (cursor.moveToNext() && retrievedTracksCount < MAX_BATCH_SIZE) {
             int id = cursor.getInt(0);

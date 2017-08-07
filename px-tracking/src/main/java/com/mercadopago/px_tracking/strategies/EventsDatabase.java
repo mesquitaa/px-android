@@ -12,7 +12,7 @@ public interface EventsDatabase {
 
     void persist(Event event);
 
-    void persist(List<Event> batch);
+    void returnEvents(List<Event> batch);
 
     Integer getBatchSize();
 

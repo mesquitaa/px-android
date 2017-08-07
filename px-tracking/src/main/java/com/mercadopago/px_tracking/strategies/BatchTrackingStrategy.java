@@ -1,6 +1,7 @@
 package com.mercadopago.px_tracking.strategies;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.mercadopago.px_tracking.model.Event;
 import com.mercadopago.px_tracking.model.EventTrackIntent;
@@ -20,7 +21,6 @@ public class BatchTrackingStrategy extends TrackingStrategy {
     private final EventsDatabase database;
     private final MPTrackingService trackingService;
     private final ConnectivityChecker connectivityChecker;
-    private int nextTrackAge;
 
     public BatchTrackingStrategy(EventsDatabase database, ConnectivityChecker connectivityChecker, MPTrackingService trackingService) {
         this.database = database;
@@ -57,8 +57,11 @@ public class BatchTrackingStrategy extends TrackingStrategy {
         trackingService.trackEvents(intent, context, new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if (!response.isSuccessful()) {
-                    database.persist(batch);
+
+                if (response.isSuccessful()) {
+                    Log.v("BATCH","SUCCESS");
+                } else {
+                    database.returnEvents(batch);
 
                     if (response.code() == 513) {
                         performTrackAttempt(context);
@@ -68,7 +71,7 @@ public class BatchTrackingStrategy extends TrackingStrategy {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                database.persist(batch);
+                database.returnEvents(batch);
             }
         });
     }
@@ -78,7 +81,7 @@ public class BatchTrackingStrategy extends TrackingStrategy {
     }
 
     public long getNextTrackAge() {
-        long result = (getCurrentTimestamp().getTime() - database.getNextTrackTimestamp().getTime())/1000 ;
+        long result = (getCurrentTimestamp().getTime() - database.getNextTrackTimestamp().getTime()) / 1000;
         return result;
     }
 }

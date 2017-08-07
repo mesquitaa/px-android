@@ -143,8 +143,8 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
                 .setScreenId(TrackingUtil.SCREEN_ID_CHECKOUT)
                 .setScreenName(TrackingUtil.SCREEN_NAME_CHECKOUT)
                 .build();
-        mpTrackingContext.trackEvent(event);
         mpTrackingContext.clearExpiredTracks();
+        mpTrackingContext.trackEvent(event);
     }
 
     @Override
