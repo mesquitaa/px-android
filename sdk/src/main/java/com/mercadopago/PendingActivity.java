@@ -165,17 +165,17 @@ public class PendingActivity extends MercadoPagoBaseActivity implements TimerObs
         ScreenViewEvent.Builder builder = new ScreenViewEvent.Builder()
                 .setScreenId(TrackingUtil.SCREEN_ID_PAYMENT_RESULT_PENDING)
                 .setScreenName(TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_PENDING)
-                .addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_IS_EXPRESS, TrackingUtil.IS_EXPRESS_DEFAULT_VALUE)
-                .addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_STATUS, mPaymentStatus)
-                .addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_STATUS_DETAIL, mPaymentStatusDetail)
-                .addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_ID, String.valueOf(mPaymentResult.getPaymentId()));
+                .addAditionalInfo(TrackingUtil.METADATA_PAYMENT_IS_EXPRESS, TrackingUtil.IS_EXPRESS_DEFAULT_VALUE)
+                .addAditionalInfo(TrackingUtil.METADATA_PAYMENT_STATUS, mPaymentStatus)
+                .addAditionalInfo(TrackingUtil.METADATA_PAYMENT_STATUS_DETAIL, mPaymentStatusDetail)
+                .addAditionalInfo(TrackingUtil.METADATA_PAYMENT_ID, String.valueOf(mPaymentResult.getPaymentId()));
 
         if (mPaymentData != null && mPaymentData.getPaymentMethod() != null) {
-            builder.addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_TYPE_ID, mPaymentData.getPaymentMethod().getPaymentTypeId());
-            builder.addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_METHOD_ID, mPaymentData.getPaymentMethod().getId());
+            builder.addAditionalInfo(TrackingUtil.METADATA_PAYMENT_TYPE_ID, mPaymentData.getPaymentMethod().getPaymentTypeId());
+            builder.addAditionalInfo(TrackingUtil.METADATA_PAYMENT_METHOD_ID, mPaymentData.getPaymentMethod().getId());
         }
         if (mPaymentData != null && mPaymentData.getIssuer() != null) {
-            builder.addAditionalInfo(TrackingUtil.ADDITIONAL_ISSUER_ID, String.valueOf(mPaymentData.getIssuer().getId()));
+            builder.addAditionalInfo(TrackingUtil.METADATA_ISSUER_ID, String.valueOf(mPaymentData.getIssuer().getId()));
         }
 
         ScreenViewEvent event = builder.build();

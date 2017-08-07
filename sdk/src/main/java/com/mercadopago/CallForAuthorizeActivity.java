@@ -178,19 +178,19 @@ public class CallForAuthorizeActivity extends MercadoPagoBaseActivity implements
         ScreenViewEvent.Builder builder = new ScreenViewEvent.Builder()
                 .setScreenId(TrackingUtil.SCREEN_ID_PAYMENT_RESULT_REJECTED)
                 .setScreenName(TrackingUtil.SCREEN_NAME_PAYMENT_RESULT_REJECTED)
-                .addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_IS_EXPRESS, TrackingUtil.IS_EXPRESS_DEFAULT_VALUE)
-                .addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_STATUS, mPaymentResult.getPaymentStatus())
-                .addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_STATUS_DETAIL, mPaymentResult.getPaymentStatusDetail())
-                .addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_ID, String.valueOf(mPaymentResult.getPaymentId()));
+                .addAditionalInfo(TrackingUtil.METADATA_PAYMENT_IS_EXPRESS, TrackingUtil.IS_EXPRESS_DEFAULT_VALUE)
+                .addAditionalInfo(TrackingUtil.METADATA_PAYMENT_STATUS, mPaymentResult.getPaymentStatus())
+                .addAditionalInfo(TrackingUtil.METADATA_PAYMENT_STATUS_DETAIL, mPaymentResult.getPaymentStatusDetail())
+                .addAditionalInfo(TrackingUtil.METADATA_PAYMENT_ID, String.valueOf(mPaymentResult.getPaymentId()));
 
         if (mPaymentMethodId != null) {
-            builder.addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_METHOD_ID, mPaymentMethodId);
+            builder.addAditionalInfo(TrackingUtil.METADATA_PAYMENT_METHOD_ID, mPaymentMethodId);
         }
         if (mPaymentTypeId != null) {
-            builder.addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_TYPE_ID, mPaymentTypeId);
+            builder.addAditionalInfo(TrackingUtil.METADATA_PAYMENT_TYPE_ID, mPaymentTypeId);
         }
         if (mIssuer != null) {
-            builder.addAditionalInfo(TrackingUtil.ADDITIONAL_ISSUER_ID, String.valueOf(mIssuer.getId()));
+            builder.addAditionalInfo(TrackingUtil.METADATA_ISSUER_ID, String.valueOf(mIssuer.getId()));
         }
 
         ScreenViewEvent event = builder.build();

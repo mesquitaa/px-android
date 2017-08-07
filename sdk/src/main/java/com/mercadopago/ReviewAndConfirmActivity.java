@@ -262,14 +262,14 @@ public class ReviewAndConfirmActivity extends MercadoPagoBaseActivity implements
             ScreenViewEvent.Builder builder = new ScreenViewEvent.Builder()
                     .setScreenId(TrackingUtil.SCREEN_ID_REVIEW_AND_CONFIRM)
                     .setScreenName(TrackingUtil.SCREEN_NAME_REVIEW_AND_CONFIRM)
-                    .addAditionalInfo(TrackingUtil.ADDITIONAL_SHIPPING_INFO, TrackingUtil.HAS_SHIPPING_DEFAULT_VALUE);
+                    .addAditionalInfo(TrackingUtil.METADATA_SHIPPING_INFO, TrackingUtil.HAS_SHIPPING_DEFAULT_VALUE);
 
             if (paymentData.getPaymentMethod() != null) {
-                builder.addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_TYPE_ID, paymentData.getPaymentMethod().getPaymentTypeId());
-                builder.addAditionalInfo(TrackingUtil.ADDITIONAL_PAYMENT_METHOD_ID, paymentData.getPaymentMethod().getId());
+                builder.addAditionalInfo(TrackingUtil.METADATA_PAYMENT_TYPE_ID, paymentData.getPaymentMethod().getPaymentTypeId());
+                builder.addAditionalInfo(TrackingUtil.METADATA_PAYMENT_METHOD_ID, paymentData.getPaymentMethod().getId());
             }
             if (paymentData.getIssuer() != null) {
-                builder.addAditionalInfo(TrackingUtil.ADDITIONAL_ISSUER_ID, String.valueOf(paymentData.getIssuer().getId()));
+                builder.addAditionalInfo(TrackingUtil.METADATA_ISSUER_ID, String.valueOf(paymentData.getIssuer().getId()));
             }
 
             ScreenViewEvent event = builder.build();

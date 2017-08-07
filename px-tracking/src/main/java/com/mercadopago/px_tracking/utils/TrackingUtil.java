@@ -62,14 +62,14 @@ public class TrackingUtil {
     public static final String GROUP_CARDS = "cards";
 
     //Additional Info Keys
-    public static final String ADDITIONAL_PAYMENT_METHOD_ID = "payment_method";
-    public static final String ADDITIONAL_PAYMENT_TYPE_ID = "payment_type";
-    public static final String ADDITIONAL_ISSUER_ID = "issuer";
-    public static final String ADDITIONAL_SHIPPING_INFO = "has_shipping";
-    public static final String ADDITIONAL_PAYMENT_STATUS = "payment_status";
-    public static final String ADDITIONAL_PAYMENT_ID = "payment_id";
-    public static final String ADDITIONAL_PAYMENT_STATUS_DETAIL = "payment_status_detail";
-    public static final String ADDITIONAL_PAYMENT_IS_EXPRESS = "is_express";
+    public static final String METADATA_PAYMENT_METHOD_ID = "payment_method";
+    public static final String METADATA_PAYMENT_TYPE_ID = "payment_type";
+    public static final String METADATA_ISSUER_ID = "issuer";
+    public static final String METADATA_SHIPPING_INFO = "has_shipping";
+    public static final String METADATA_PAYMENT_STATUS = "payment_status";
+    public static final String METADATA_PAYMENT_ID = "payment_id";
+    public static final String METADATA_PAYMENT_STATUS_DETAIL = "payment_status_detail";
+    public static final String METADATA_PAYMENT_IS_EXPRESS = "is_express";
 
     //Default values
     public static final String HAS_SHIPPING_DEFAULT_VALUE = "false";
