@@ -21,7 +21,7 @@ public class ScreenViewEvent extends Event {
         super();
         setType(TYPE_SCREEN_VIEW);
         setTimestamp(new Timestamp(System.currentTimeMillis()));
-        setAdditionalInfo(builder.additionalInfo);
+        setMetadata(builder.additionalInfo);
         this.screenId = builder.screenId;
         this.screenName = builder.screenName;
     }

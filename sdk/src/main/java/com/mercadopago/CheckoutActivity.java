@@ -110,7 +110,7 @@ public class CheckoutActivity extends MercadoPagoBaseActivity implements Checkou
 
         mServicePreference = JsonUtil.getInstance().fromJson(this.getIntent().getStringExtra("servicePreference"), ServicePreference.class);
         mDecorationPreference = JsonUtil.getInstance().fromJson(getIntent().getStringExtra("decorationPreference"), DecorationPreference.class);
-        mMerchantPublicKey = this.getIntent().getStringExtra("merchantPublicKey");
+         mMerchantPublicKey = this.getIntent().getStringExtra("merchantPublicKey");
         mPrivateKey = checkoutPreference.getPayer() != null ? checkoutPreference.getPayer().getAccessToken() : "";
 
         mCheckoutPresenter.setCheckoutPreference(checkoutPreference);

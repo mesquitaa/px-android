@@ -24,7 +24,6 @@ public interface TrackingService {
     @POST("/" + BuildConfig.API_VERSION + "/checkout/tracking/off")
     Call<Void> trackPaymentId(@Body PaymentIntent body);
 
-    @Headers("Accept-Version:" + TRACKING_SERVICE_VERSION)
     @POST("/" + BuildConfig.API_VERSION + "/checkout/tracking/events")
     Call<Void> trackEvents(@Body EventTrackIntent body);
 }

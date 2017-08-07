@@ -59,7 +59,7 @@ public class BatchTrackingStrategy extends TrackingStrategy {
             public void onResponse(Call<Void> call, Response<Void> response) {
 
                 if (response.isSuccessful()) {
-                    Log.v("BATCH","SUCCESS");
+                    
                 } else {
                     database.returnEvents(batch);
 
