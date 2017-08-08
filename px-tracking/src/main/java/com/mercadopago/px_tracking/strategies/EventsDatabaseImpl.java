@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -62,8 +63,8 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
     public void returnEvents(List<Event> batch) {
         int i = batch.size();
         Event olderEvent;
-        while(i!=0){
-            olderEvent = batch.get(i-1);
+        while (i != 0) {
+            olderEvent = batch.get(i - 1);
             persist(olderEvent);
             i--;
         }
@@ -97,11 +98,11 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
 
     @Override
     public void clearExpiredTracks() {
+        getBatchSize();
         SQLiteDatabase db = getWritableDatabase();
-        int count = db.delete(TABLE_NAME, "'EXTRACT(DAY FROM TIMESTAMP " + TIMESTAMP + ")'" + "- 'EXTRACT(DAY FROM TIMESTAMP " + new String(new Timestamp(System.currentTimeMillis()).toString()) + ")'" + " > " + MAX_LIFETIME, null);
+        int count = db.delete(TABLE_NAME, "julianday('now') - julianday(" + TIMESTAMP + ") >= " + MAX_LIFETIME, null);
         batchSizeCache = batchSizeCache - count;
         db.close();
-
     }
 
     @Override
@@ -118,6 +119,18 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
         }
         db.close();
         return timestamp;
+    }
+
+    @Override
+    public void clearDatabase() {
+        SQLiteDatabase db = getReadableDatabase();
+        try{
+            db.execSQL("delete from "+ TABLE_NAME);
+            batchSizeCache = 0;
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        db.close();
     }
 
     @Override
@@ -149,5 +162,6 @@ public class EventsDatabaseImpl extends SQLiteOpenHelper implements EventsDataba
         int rowsAffected = db.delete(TABLE_NAME, ID + "=" + id, null);
         batchSizeCache = batchSizeCache - rowsAffected;
     }
+
 
 }

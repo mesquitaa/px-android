@@ -21,4 +21,13 @@ public class EventMock {
             return null;
         }
     }
+
+    public static ScreenViewEvent getExpiredScreenViewEvent(){
+        try {
+            String json = MockUtils.getFile(InstrumentationRegistry.getContext(), "mocks/expired_screen_view_event.json");
+            return JsonConverter.getInstance().fromJson(json, ScreenViewEvent.class);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
 }

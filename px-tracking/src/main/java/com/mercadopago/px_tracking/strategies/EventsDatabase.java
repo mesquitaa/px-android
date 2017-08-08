@@ -21,4 +21,6 @@ public interface EventsDatabase {
     void clearExpiredTracks();
 
     Timestamp getNextTrackTimestamp();
+
+    void clearDatabase();
 }
