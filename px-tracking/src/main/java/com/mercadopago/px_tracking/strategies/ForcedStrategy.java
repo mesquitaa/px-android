@@ -1,6 +1,7 @@
 package com.mercadopago.px_tracking.strategies;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.mercadopago.px_tracking.model.Event;
 import com.mercadopago.px_tracking.model.EventTrackIntent;
@@ -14,12 +15,11 @@ import retrofit2.Response;
 
 public class ForcedStrategy extends TrackingStrategy {
 
-    private final EventsDatabase database;
     private final MPTrackingService trackingService;
     private final ConnectivityChecker connectivityChecker;
 
     public ForcedStrategy(EventsDatabase database, ConnectivityChecker connectivityChecker, MPTrackingService trackingService) {
-        this.database = database;
+        setDatabase(database);
         this.trackingService = trackingService;
         this.connectivityChecker = connectivityChecker;
     }
@@ -36,7 +36,7 @@ public class ForcedStrategy extends TrackingStrategy {
     }
 
     private boolean shouldSendBatch() {
-        return isConnectivityOk();
+        return isConnectivityOk() && isDataAvailable();
     }
 
     private boolean isConnectivityOk() {
@@ -45,15 +45,16 @@ public class ForcedStrategy extends TrackingStrategy {
 
 
     private void sendTracksBatch(final Context context) {
-        final List<Event> batch = database.retrieveBatch();
+        final List<Event> batch = getDatabase().retrieveBatch();
         EventTrackIntent intent = new EventTrackIntent(getClientId(), getAppInformation(), getDeviceInfo(), batch);
         trackingService.trackEvents(intent, context, new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
+                    Log.v("FORCED","200");
                     performTrackAttempt(context);
                 } else {
-                    database.returnEvents(batch);
+                    getDatabase().returnEvents(batch);
 
                     if (response.code() == 513) {
                         performTrackAttempt(context);
@@ -63,7 +64,7 @@ public class ForcedStrategy extends TrackingStrategy {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                database.returnEvents(batch);
+                getDatabase().returnEvents(batch);
             }
         });
     }

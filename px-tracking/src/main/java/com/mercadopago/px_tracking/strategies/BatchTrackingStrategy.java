@@ -18,12 +18,11 @@ public class BatchTrackingStrategy extends TrackingStrategy {
 
     private static final long MAX_AGEING = 15;
 
-    private final EventsDatabase database;
     private final MPTrackingService trackingService;
     private final ConnectivityChecker connectivityChecker;
 
     public BatchTrackingStrategy(EventsDatabase database, ConnectivityChecker connectivityChecker, MPTrackingService trackingService) {
-        this.database = database;
+        setDatabase(database);
         this.trackingService = trackingService;
         this.connectivityChecker = connectivityChecker;
     }
@@ -40,7 +39,7 @@ public class BatchTrackingStrategy extends TrackingStrategy {
     }
 
     private boolean shouldSendBatch() {
-        return isConnectivityOk() && isDataReady();
+        return isConnectivityOk() && isDataAvailable() && isDataReady();
     }
 
     private boolean isConnectivityOk() {
@@ -52,16 +51,16 @@ public class BatchTrackingStrategy extends TrackingStrategy {
     }
 
     private void sendTracksBatch(final Context context) {
-        final List<Event> batch = database.retrieveBatch();
+        final List<Event> batch = getDatabase().retrieveBatch();
         EventTrackIntent intent = new EventTrackIntent(getClientId(), getAppInformation(), getDeviceInfo(), batch);
         trackingService.trackEvents(intent, context, new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
 
                 if (response.isSuccessful()) {
-                    
+                    Log.v("BATCH","200");
                 } else {
-                    database.returnEvents(batch);
+                    getDatabase().returnEvents(batch);
 
                     if (response.code() == 513) {
                         performTrackAttempt(context);
@@ -71,7 +70,7 @@ public class BatchTrackingStrategy extends TrackingStrategy {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                database.returnEvents(batch);
+                getDatabase().returnEvents(batch);
             }
         });
     }
@@ -81,7 +80,7 @@ public class BatchTrackingStrategy extends TrackingStrategy {
     }
 
     public long getNextTrackAge() {
-        long result = (getCurrentTimestamp().getTime() - database.getNextTrackTimestamp().getTime()) / 1000;
+        long result = (getCurrentTimestamp().getTime() - getDatabase().getNextTrackTimestamp().getTime()) / 1000;
         return result;
     }
 }

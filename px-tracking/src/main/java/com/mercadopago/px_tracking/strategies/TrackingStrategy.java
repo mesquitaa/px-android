@@ -13,6 +13,7 @@ public abstract class TrackingStrategy {
     private String clientId;
     private AppInformation appInformation;
     private DeviceInfo deviceInfo;
+    private EventsDatabase database;
 
     public abstract void trackEvent(Event event, Context context);
 
@@ -38,5 +39,17 @@ public abstract class TrackingStrategy {
 
     public DeviceInfo getDeviceInfo() {
         return deviceInfo;
+    }
+
+    public EventsDatabase getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(EventsDatabase database) {
+        this.database = database;
+    }
+
+    public boolean isDataAvailable() {
+        return database!=null && database.getBatchSize() != 0;
     }
 }
